@@ -11,6 +11,10 @@ class ModuleManager:
         self._modules: Dict[str: Module] = {}
         self._builders = {}
 
+    @property
+    def modules(self):
+        return list(self._modules.keys())
+
     def register_builder(self, module: str, builder: Callable):
         self._builders[module] = builder
 

@@ -27,7 +27,14 @@ class Agent:
 
     @property
     def methods(self):
+        #TODO: get this to properly scope methods to their Task
         return [_methods for _methods in self._known_tasks.values()]
+
+    def registered_modules(self, task: str):
+        return self.task_hub.registered_modules(task)
+
+    def loaded_modules(self):
+        return self.module_manager.modules
 
     def learn(self, task: Union[str, Task], module: Optional[str] = None, force_relearn=False, **kwargs):
         if isinstance(task, Task):
