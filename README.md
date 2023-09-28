@@ -111,4 +111,4 @@ dosk.SongSerializer.serialize(song)  # '<song id="1"><title>Billie Jean</title><
 Note that JsonSerializer and XmlSerializer are **not** equivalent. The only promise they have made is that they define 
 a method, *serialize*, which takes a *Song* object and returns a string. In this case, one yields a json-formatted 
 string and one an xml-formatted string. In general, anything not explicitly defined by the Task API must be checked by 
-the user make sure their agent is learning the right things. 
+the user to make sure their agent is learning the right things. 
