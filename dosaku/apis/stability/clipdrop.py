@@ -1,8 +1,9 @@
 from PIL import Image
 import requests
+from typing import Optional
 
 from dosaku import Config
-from dosaku.utils import pil_to_bytes, bytes_to_pil, center
+from dosaku.utils import bytes_to_pil, center, ifnone, pil_to_bytes
 
 
 class Clipdrop:
@@ -11,9 +12,12 @@ class Clipdrop:
     Clipdrop requires an API key to use. Put the API key in dosaku/config/config.ini.
     """
     config = Config()
+    engine_id = "stable-diffusion-xl-1024-v1-0"
 
-    def text_to_image(self, prompt: str) -> Image:
+    def text_to_image(self, prompt: str, ) -> Image:
         """Replaces the background according to the prompt.
+
+        Refer to the official Clipdrop documentation for image resolution support.
 
         Args:
             prompt: Input prompt.

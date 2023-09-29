@@ -7,7 +7,11 @@ class Module(ABC):
     @property
     @abstractmethod
     def name(self):
-        pass
+        raise NotImplementedError
+
+    @property
+    def is_service(self):
+        return False
 
     @classmethod
     def register_module(cls):

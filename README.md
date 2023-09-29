@@ -90,7 +90,7 @@ dosk.loaded_modules  # ['JsonSerializer']
 ```
 
 Which will yield *JsonSerializer*. JsonSerializer is a class defined in 
-[json_serializer.py](dosaku/modules/json_serializer.py) that has registered itself as handling the task 
+[json_serializer.py](dosaku/modules/dosaku/json_serializer.py) that has registered itself as handling the task 
 *SongSerializer*. That is, the JsonSerializer class implements the actual code necessary to do all the abstract methods
 for SongSerializer (in this simple example, just the *serialize* method). 
 
