@@ -1,0 +1,9 @@
+huggingface-hub>=0.17.1
+accelerate>=0.23.0
+torch>=2.0.1
+torchaudio>=2.0.2
+torchvision>=0.15.2
+transformers>=4.33.2
+diffusers>=0.21.2
+opencv-python>=4.8.1.78
+matplotlib>=3.7.3
