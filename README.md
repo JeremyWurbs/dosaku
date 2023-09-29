@@ -163,9 +163,9 @@ Comparing Modules and Services:
 |                                        May cost money |         |     x     |
 |                                  Computation location |  Local  | Interwebs |
 
-In general, only use Modules you trust, as they are likely downloading data (AI models with associated weights) to your
+In general, only use modules you trust, as they are likely downloading data (AI models with associated weights) to your
 machine, where they will subsequently run. And, definitely, only use services you trust and understand how much money 
-using them costs. There are no limits within Dosaku itself-- so before you request a million images from the Clipdrop
+using them costs. There are no limits within Dosaku itself— so before you request a million images from the Clipdrop
 service, it would be a good idea to [look at their pricing](https://clipdrop.co/apis/pricing). Currently, processing a
 single text-to-image request is approximately 10 cents (USD 0.10) after any initial free credits. 
 
