@@ -1,6 +1,7 @@
 from configparser import ConfigParser, ExtendedInterpolation
 import json
 import os
+from typing import Any, Dict
 
 
 class Config:
@@ -49,11 +50,14 @@ class Config:
                 if v[0] == '~':
                     self.config[section][k] = v.replace('~', os.path.expanduser('~'))
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: str) -> Any:
         return self.config[item]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str({section: dict(self.config[section]) for section in self.config.sections()}).replace("\'", "\"")
 
-    def as_dict(self):
+    def as_dict(self) -> Dict:
         return json.loads(self.__str__())
+
+    def pretty_print(self) -> str:
+        return json.dumps(self.as_dict(), indent=4)
