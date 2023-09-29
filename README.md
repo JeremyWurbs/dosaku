@@ -169,7 +169,7 @@ using them costs. There are no limits within Dosaku itself— so before you requ
 service, it would be a good idea to [look at their pricing](https://clipdrop.co/apis/pricing). Currently, processing a
 single text-to-image request is approximately 10 cents (USD 0.10) after any initial free credits. 
 
-With that, in order to continue, you may enable services and learn text-to-image with:
+With that, in order to continue, you may enable services, and then learn and use text-to-image with:
 
 ```python
 dosk.enable_services()
