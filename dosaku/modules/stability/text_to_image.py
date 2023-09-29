@@ -1,5 +1,4 @@
 from PIL.Image import Image
-from typing import Optional
 
 from dosaku import Service
 from dosaku.apis import Clipdrop

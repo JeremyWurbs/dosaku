@@ -15,7 +15,7 @@ class Module(ABC):
 
     @classmethod
     def register_module(cls):
-        module_manager.register_builder(cls.name, cls)
+        module_manager.register_builder(module=cls.name, builder=cls, is_service=cls.is_service)
 
     @classmethod
     def register_task(cls, task: str):

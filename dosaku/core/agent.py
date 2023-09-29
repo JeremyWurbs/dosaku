@@ -10,8 +10,9 @@ class Agent:
     task_hub = task_hub
     module_manager = module_manager
 
-    def __init__(self):
+    def __init__(self, enable_services=False):
         self._known_tasks: Dict[str: List[str]] = dict()
+        self._allow_services = enable_services
 
     @classmethod
     def register_task(cls, task: Task):
@@ -36,6 +37,12 @@ class Agent:
     def loaded_modules(self):
         return self.module_manager.modules
 
+    def enable_services(self):
+        self._allow_services = True
+
+    def disable_services(self):
+        self._allow_services = False
+
     def learn(self, task: Union[str, Task], module: Optional[str] = None, force_relearn=False, **kwargs):
         if isinstance(task, Task):
             task = task.name
@@ -44,12 +51,12 @@ class Agent:
             modules = self.task_hub.registered_modules(task)
             if modules is None:
                 raise ValueError(f'There are no known modules which have registered the task {task}.')
-            else:
-                module = modules[0]
+            module = modules[0]
 
         print(f'Attemping to learn {task} via the module {module}.')
         try:
-            self.module_manager.load_module(module, force_reload=force_relearn, **kwargs)
+            self.module_manager.load_module(
+                module, force_reload=force_relearn, allow_services=self._allow_services, **kwargs)
         except RuntimeError as err:
             raise err
 
