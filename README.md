@@ -212,7 +212,7 @@ agent = Agent()
 agent.learn('TextToImage', module='ClipdropTextToImage')  # RuntimeError
 ```
 
-Which will *not* work by default, instead throwing an import error: 
+Which will *not* work by default, instead throwing an important error: 
 
 ```text 
 Loaded module was a service, but services have not been enabled. Enable services or load a non-service module.
@@ -249,9 +249,9 @@ want to use e.g. ChatGPT, then you are completely responsible for how much money
 With that, in order to continue, you may enable services, and then learn and use text-to-image with:
 
 ```python
-dosk.enable_services()
-dosk.learn('TextToImage', module='ClipdropTextToImage')
-image = dosk.TextToImage.text_to_image('Dosaku playing a game of go')
+agent.enable_services()
+agent.learn('TextToImage', module='ClipdropTextToImage')
+image = agent.TextToImage.text_to_image('Dosaku playing a game of go')
 image.show()
 ```
 
