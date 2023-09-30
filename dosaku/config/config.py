@@ -35,6 +35,7 @@ class Config:
 
     def __init__(self, config_path: str = None):
         self.config = ConfigParser(interpolation=ExtendedInterpolation())
+        self.config.optionxform = str  # Sets ConfigParser to maintain case sensitivity
 
         if config_path is None:
             __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))

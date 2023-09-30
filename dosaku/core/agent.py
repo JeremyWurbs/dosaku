@@ -18,6 +18,10 @@ class Agent:
     def register_task(cls, task: Task):
         cls.task_hub.register_task(task)
 
+    @classmethod
+    def api(cls, task: str):
+        cls.task_hub.api(task)
+
     @property
     def learnable_tasks(self):
         return list(self.task_hub.tasks.keys())
@@ -36,6 +40,10 @@ class Agent:
 
     def loaded_modules(self):
         return self.module_manager.modules
+
+    @property
+    def services_enabled(self):
+        return self._allow_services
 
     def enable_services(self):
         self._allow_services = True

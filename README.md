@@ -14,10 +14,10 @@ pip install -r requirements.txt
 
 ## Quickstart
 
-The main personal AI agent class is *Dosaku*.
+The default personal AI assistant agent is *Dosaku*.
 
 ```python
-from dosaku import Dosaku
+from dosaku.agents import Dosaku
 
 dosk = Dosaku()
 ```
@@ -25,10 +25,12 @@ dosk = Dosaku()
 You can see what your agent can do with:
 
 ```python
-dosk.tasks  # []
+dosk.tasks
 ```
 
-Which will print a notably empty list :( 
+Which will print a list of all the tasks Dosaku knows by default. 
+
+## Learning New Tasks
 
 Fortunately, your agent can learn! To see what your agent can learn:
 
@@ -36,11 +38,11 @@ Fortunately, your agent can learn! To see what your agent can learn:
 dosk.learnable_tasks  # ['SongSerializer', ...]
 ```
 
-Which will print a notably longer list. To learn one of the tasks:
+Which will print a notably longer list of tasks that your agent can learn. To learn one of the tasks:
 
 ```python
 dosk.learn('SongSerializer')
-dosk.tasks  # ['SongSerializer']
+dosk.tasks  # [..., 'SongSerializer']
 ```
 
 Which will now print `SongSerializer`. The `SongSerializer` task is defined in 
@@ -60,6 +62,24 @@ dosk.SongSerializer.serialize(song)  # AttributeError: 'Agent' object has no att
 dosk.learn('SongSerializer')
 dosk.SongSerializer.serialize(song)  # '{"id": "1", "title": "Billie Jean", "artist": "Michael Jackson"}'
 ```
+
+Note how tasks are learned and used. Tasks are python classes, and as such get python names. Each task defines a set of 
+abstract methods which are the "actions" your agent can *do* when it learns the task, and as such get python 
+method-style names. In general, you access these actions with:
+
+```python
+agent_name.TaskName.task_action_1()
+agent_name.TaskName.task_action_2()
+```
+
+To find out what *actions* a particular task gives you access to, you can ask your agent for the associated API with:
+
+```python
+dosk.api('SongSerializer')  # ['serialize']
+```
+
+Which will list out all the actions associated with that task. For more detailed information on the task, or how 
+individual modules may implement that task, you will have to consult the associated documentation (wherever it may be).
 
 ## Tasks and Modules
 

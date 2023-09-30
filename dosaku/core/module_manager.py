@@ -15,13 +15,13 @@ class ModuleManager:
     def modules(self):
         return list(self._modules.keys())
 
-    def register_builder(self, module: str, builder: Callable, is_service: bool):
+    def register_builder(self, module: str, builder: Callable):
         self._builders[module] = builder
 
     def _create(self, module: str, **kwargs):
         builder = self._builders.get(module)
         if not builder:
-            raise ValueError(f'There is no record of a Module {module}. Unable to create one.')
+            raise ValueError(f'A builder for module {module} has not been registered. Unable to create one.')
         return builder(**kwargs)
 
     def load_module(self, module: str, force_reload: bool = False, allow_services: bool = False, **kwargs):
