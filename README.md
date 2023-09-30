@@ -141,8 +141,8 @@ while other tasks, like "PlayGo", define a rather involved API compatible with t
 [go text protocol](https://en.wikipedia.org/wiki/Go_Text_Protocol), including dozens of individual actions and 
 maintaining state between actions.
 
-In either case, the task translates a human concept into an explicit machine API interface. Tasks do **not** actually 
-implement the code necessary to *do* the task and its actions. In the above example, however, when we learned Chat we 
+In either case, the task translates a human concept into an explicit machine API interface. Tasks do *not* implement the 
+actual code necessary to *do* the task and its actions. In the above example, however, when we learned Chat we 
 actually *did* the action "chat". As programmers may have guessed, tasks are abstract interface classes and, at least in 
 python, cannot even be instantiated. What, then, is actually *doing* the task? What is it that our agent is learning 
 when it "learns"?
