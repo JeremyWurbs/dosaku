@@ -203,7 +203,7 @@ config = Config()
 config['API_KEYS']['CLIPDROP']  # Should show your API key
 ```
 
-Once your API key is set up, you may use services with:
+Once your API key is set up, you may use a service in the same way you'd use a module:
 
 ```python
 from dosaku import Agent
