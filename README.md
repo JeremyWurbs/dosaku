@@ -39,8 +39,8 @@ response = agent.Chat.chat("Hello, what's your name?")  # "Hi, I'm EchoBot."
 ## Tasks and Actions
 
 Note the way in which we used our agent. Our agent learned the *task* "Chat". This task defines an *action*, "chat". (As 
-a quick aside, Tasks are python classes, and thus get python class naming conventions (i.e. `TheyWillLookLikeThis`), and 
-actions are python methods and thus get python method naming conventions, i.e. `they_will_look_like_this`). In general, 
+a quick aside: tasks are python classes, and thus get python class naming conventions, i.e. `TheyWillLookLikeThis`.  
+Actions are python methods, and thus get python method naming conventions, i.e. `they_will_look_like_this`). In general, 
 we get our agent to *do* an action with:
 
 ```python
@@ -136,14 +136,15 @@ concepts to the Dosaku platform: *tasks* and *modules*.
 Tasks live in the human space. They are the things we want our AI assistant to be able to do: "*play chess*", "*extract 
 the text from a pdf document*", "*text-to-image*" (i.e. create an image given a text prompt). Each of these *Tasks* 
 takes a human concept and defines an explicit API. Some tasks, like "Chat", define only a single associated action,
-while other tasks, like "PlayGo", define a rather involved API compatible the 
+while other tasks, like "PlayGo", define a rather involved API compatible with the 
 [go text protocol](https://en.wikipedia.org/wiki/Go_Text_Protocol), including dozens of individual actions and 
 maintaining state between actions.
 
-In either case, the task defines a human concept into a machine API interface. Tasks do **not** actually implement the 
-code necessary to *do* the task and its actions. In the above example, we learned the task "Chat" and actually *did* 
-the action "chat". As programmers may have guessed, Tasks are abstract classes and, at least in python, cannot even be 
-instantiated. What, then, is actually *doing* the task? What is it that our agent learning when it "learns"?
+In either case, the task translates a human concept into an explicit machine API interface. Tasks do **not** actually 
+implement the code necessary to *do* the task and its actions. In the above example, however, when we learned Chat we 
+actually *did* the action "chat". As programmers may have guessed, Tasks are abstract interface classes and, at least in 
+python, cannot even be instantiated. What, then, is actually *doing* the task? What is it that our agent learning when 
+it "learns"?
 
 The answer is a Module.
 
