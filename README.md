@@ -14,25 +14,90 @@ pip install -r requirements.txt
 
 ## Quickstart
 
-The default personal AI assistant agent is *Dosaku*.
+The default personal AI assistant agent class is *Agent*.
 
 ```python
-from dosaku.agents import Dosaku
+from dosaku import Agent
 
-dosk = Dosaku()
+agent = Agent()
 ```
 
 You can see what your agent can do with:
 
 ```python
-dosk.tasks
+agent.tasks  # []
 ```
 
-Which will print a list of all the tasks Dosaku knows by default. 
+Which will print a notably empty list. Fortunately your agent can learn! Let's learn and try 'Chat':
+
+```python
+agent.learn('Chat')
+agent.tasks  # ['Chat']
+response = agent.Chat.chat("Hello, what's your name?")  # "Hi, I'm EchoBot."
+```
+
+## Tasks and Actions
+
+Note the way in which we used our agent. Our agent learned the *task* "Chat". This task defines an *action*, "chat". (As 
+a quick aside, Tasks are python classes, and thus get python class naming conventions (i.e. `TheyWillLookLikeThis`), and 
+actions are python methods and thus get python method naming conventions, i.e. `they_will_look_like_this`). In general, 
+we get our agent to *do* an action with:
+
+```python
+agent_name.TaskName.task_action()
+agent_name.TaskName.another_task_action()
+```
+
+To find out what *actions* a particular task gives you access to, you can ask your agent for the associated Task API:
+
+```python
+agent.api('Chat')  # ['chat']
+```
+
+Which will list out all the actions associated with that task. For more detailed information on the task, including how
+to use each action, you may request any documentation provided by the task creator:
+
+```python
+dosk.doc('Chat')  # 'Interface for a generic conversational chatbot.'
+dosk.doc('Chat', action='chat')  # "Send a message to the agent and get a response. Args: ... Example: ..."
+```
+
+Which is roughly equivalent to the following:
+
+```python
+from dosaku.tasks import Chat
+Chat.__doc__  # 'Interface for a generic conversational chatbot.'
+Chat.chat.__doc__  # "Send a message to the agent and get a response. Args: ... Example: ..."
+```
 
 ## Learning New Tasks
 
-Fortunately, your agent can learn! To see what your agent can learn:
+The base Agent will not know any tasks by default. To see what your agent can learn, you may ask it:
+
+```python
+agent.learnable_tasks  # ['Chat', 'GradioChat', ...]
+```
+
+Which will print out a notably longer list. [Gradio](https://www.gradio.app/) is a library for quickly building machine
+learning applications. It provides a ChatInterface which we wrap in Dosaku as its own task "GradioChat". We can examine 
+this task with:
+
+```python
+agent.api('GradioChat')  # ['chat', 'predict', ...]
+```
+
+The GradioChat task has the same *chat* action from before, but now there is an additional *predict* action. You can see
+how to use this action with:
+
+```python
+agent.doc('GradioChat', 'predict')
+```
+
+The *predict* action is similar to *chat*, but accepts an additional chat *history* argument. There are a few other 
+actions defined by the GradioChat task as well. In any case, the GradioChat task defines the task used in the standard
+Dosaku chat agent application.
+
+## [Old]
 
 ```python
 dosk.learnable_tasks  # ['SongSerializer', ...]
@@ -63,24 +128,6 @@ dosk.learn('SongSerializer')
 dosk.SongSerializer.serialize(song)  # '{"id": "1", "title": "Billie Jean", "artist": "Michael Jackson"}'
 ```
 
-Note how tasks are learned and used. Tasks are python classes, and as such get python names. Each task defines a set of 
-abstract methods which are the "actions" your agent can *do* when it learns the task, and as such get python 
-method-style names. In general, you access these actions with:
-
-```python
-agent_name.TaskName.task_action_1()
-agent_name.TaskName.task_action_2()
-```
-
-To find out what *actions* a particular task gives you access to, you can ask your agent for the associated API with:
-
-```python
-dosk.api('SongSerializer')  # ['serialize']
-```
-
-Which will list out all the actions associated with that task. For more detailed information on the task, or how 
-individual modules may implement that task, you will have to consult the associated documentation (wherever it may be).
-
 ## Tasks and Modules
 
 Dosaku is meant to bridge the world of humans and AI. As such, there are two fundamental *spaces* which define the key 
@@ -88,14 +135,15 @@ concepts to the Dosaku platform: *tasks* and *modules*.
 
 Tasks live in the human space. They are the things we want our AI assistant to be able to do: "*play chess*", "*extract 
 the text from a pdf document*", "*text-to-image*" (i.e. create an image given a text prompt). Each of these *Tasks* 
-takes a human concept and defines an explicit API. The task, "play go" (go-- the ancient chess-like board game), for 
-example, can be explicitly defined by the [go text protocol](https://en.wikipedia.org/wiki/Go_Text_Protocol). Any 
-computer agent which follows this protocol can, for instance, be used to connect and play on the popular go server 
-[KGS](http://gokgs.com/). In this case, "play go" is a human-decipherable Task which defines a computer API interface.
+takes a human concept and defines an explicit API. Some tasks, like "Chat", define only a single associated action,
+while other tasks, like "PlayGo", define a rather involved API compatible the 
+[go text protocol](https://en.wikipedia.org/wiki/Go_Text_Protocol), including dozens of individual actions and 
+maintaining state between actions.
 
-In the above example, we learned the Task *SongSerializer*, which was defined as an abstract class. As you may know, 
-abstract classes do not define the actual implementation and, at least in python, cannot even be instantiated. You may 
-ask, what is actually *doing* the work then? What is it that we actually asked Dosaku to "learn". 
+In either case, the task defines a human concept into a machine API interface. Tasks do **not** actually implement the 
+code necessary to *do* the task and its actions. In the above example, we learned the task "Chat" and actually *did* 
+the action "chat". As programmers may have guessed, Tasks are abstract classes and, at least in python, cannot even be 
+instantiated. What, then, is actually *doing* the task? What is it that our agent learning when it "learns"?
 
 The answer is a Module.
 
@@ -105,34 +153,36 @@ Dosaku, however, they must register (i.e. claim that they can do) at least one T
 *program* able to do the *Task*. Later, when Dosaku does the *Task*, what it is actually doing is running the *Module* 
 program. 
 
-Following the above SongSerializer example, you can see what Module was loaded with:
+Following the above Chat example, you can see what Module was loaded with:
 
 ```python
-dosk.loaded_modules  # ['JsonSerializer']
+agent.loaded_modules  # ['EchoBot']
 ```
 
-JsonSerializer is a class defined in [json_serializer.py](dosaku/modules/dosaku/json_serializer.py) that has registered 
-itself as handling the *SongSerializer* task. That is, the JsonSerializer class implements the actual code necessary to 
-do all the abstract methods for SongSerializer (in this simple example, just the *serialize* method). 
+EchoBot is a class defined in [echo_bot.py](dosaku/modules/samples/chat/echo_bot.py) that has registered itself as 
+handling the *Chat* task. That is, the EchoBot class implements the actual code necessary to do all the actions (i.e.
+abstract methods). 
 
-But JsonSerializer is not the only possible option. You may list all the Modules that have registered themselves as 
-implementing a given Task with:
+But EchoBot is not a particularly impressive module. Fortunately, it is not the only module available for Chat. You may
+list all the modules that have registered themselves as implementing a given task with:
 
 ```python
-dosk.registered_modules('SongSerializer')  # ['JsonSerializer', 'XmlSerializer', 'YamlSerializer']
+agent.registered_modules('Chat')  # ['EchoBot', 'RedPajama', ...]
 ```
+
+**A warning before continuing**: from here on out the modules we will be loading will download large AI models (~5-10GB 
+each) and attempting to run them on a cuda-enabled GPU on your machine. The process will be automatic, and all the 
+models here will be well-known models (RedPajama, Stable Diffusion) from well-known providers 
+([Together AI](https://together.ai/), Stability AI) from a well-known model hub (Huggingface). These models are 
+well-tested and trustworthy, but if you have not used Huggingface before, or don't have a lot of disk space, or don't 
+have a cuda-enabled GPU able to run these models, it may be best to finish reading the following documentation before
+attempting to do it yourself.
 
 To learn (load, run) a different Module, we can pass it in explicitly when we learn the task:
 
 ```python
-dosk.learn('SongSerializer', module='XmlSerializer')
-dosk.SongSerializer.serialize(song)  # '<song id="1"><title>Billie Jean</title><artist>Michael Jackson</artist></song>'
+dosk.learn('Chat', module='RedPajama')
 ```
-
-Note that JsonSerializer and XmlSerializer are **not** equivalent. The only promise they have made is that they define 
-a method, *serialize*, which takes a *Song* object and returns a string. In this case, one yields a json-formatted 
-string and one an xml-formatted string. In general, anything not explicitly defined by the Task API must be checked by 
-the user to make sure their agent is learning the right things. 
 
 ## Services
 
