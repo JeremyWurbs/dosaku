@@ -58,8 +58,8 @@ Which will list out all the actions associated with that task. For more detailed
 to use each action, you may request any documentation provided by the task creator:
 
 ```python
-dosk.doc('Chat')  # 'Interface for a generic conversational chatbot.'
-dosk.doc('Chat', action='chat')  # "Send a message to the agent and get a response. Args: ... Example: ..."
+agent.doc('Chat')  # 'Interface for a generic conversational chatbot.'
+agent.doc('Chat', action='chat')  # "Send a message to the agent and get a response. Args: ... Example: ..."
 ```
 
 Which is roughly equivalent to the following:
@@ -79,7 +79,7 @@ agent.learnable_tasks  # ['Chat', 'GradioChat', ...]
 ```
 
 Which will print out a notably longer list. [Gradio](https://www.gradio.app/) is a library for quickly building machine
-learning applications. It provides a ChatInterface which we wrap in Dosaku as its own task "GradioChat". We can examine 
+learning applications. It provides a ChatInterface which we wrap in Dosaku as its own "GradioChat" task. We can examine 
 this task with:
 
 ```python
@@ -95,7 +95,8 @@ agent.doc('GradioChat', 'predict')
 
 The *predict* action is similar to *chat*, but accepts an additional chat *history* argument. There are a few other 
 actions defined by the GradioChat task as well. In any case, the GradioChat task defines the task used in the standard
-Dosaku chat agent application.
+Dosaku chat agent application, and as such it defines the interface that all named Dosaku agents must support (more on 
+named Agents later).
 
 ## [Old]
 
@@ -134,7 +135,7 @@ Dosaku is meant to bridge the world of humans and AI. As such, there are two fun
 concepts to the Dosaku platform: *tasks* and *modules*.
 
 Tasks live in the human space. They are the things we want our AI assistant to be able to do: "*play chess*", "*extract 
-the text from a pdf document*", "*text-to-image*" (i.e. create an image given a text prompt). Each of these *Tasks* 
+the text from a pdf document*", "*text-to-image*" (i.e. create an image given a text prompt). Each of these *tasks* 
 takes a human concept and defines an explicit API. Some tasks, like "Chat", define only a single associated action,
 while other tasks, like "PlayGo", define a rather involved API compatible with the 
 [go text protocol](https://en.wikipedia.org/wiki/Go_Text_Protocol), including dozens of individual actions and 
@@ -142,16 +143,16 @@ maintaining state between actions.
 
 In either case, the task translates a human concept into an explicit machine API interface. Tasks do **not** actually 
 implement the code necessary to *do* the task and its actions. In the above example, however, when we learned Chat we 
-actually *did* the action "chat". As programmers may have guessed, Tasks are abstract interface classes and, at least in 
-python, cannot even be instantiated. What, then, is actually *doing* the task? What is it that our agent learning when 
-it "learns"?
+actually *did* the action "chat". As programmers may have guessed, tasks are abstract interface classes and, at least in 
+python, cannot even be instantiated. What, then, is actually *doing* the task? What is it that our agent is learning 
+when it "learns"?
 
 The answer is a Module.
 
 Modules live in the machine space. They are programs that do *something*. Modules can be anything, really. To be used by
 Dosaku, however, they must register (i.e. claim that they can do) at least one Task. When we ask Dosaku to 
-*learn* something, what we are doing is asking Dosaku to load (download, install, load into memory, etc.) a Module 
-*program* able to do the *Task*. Later, when Dosaku does the *Task*, what it is actually doing is running the *Module* 
+*learn* something, what we are doing is asking Dosaku to *load* (download, install, load into memory, etc.) a Module 
+program able to do the *Task*. Later, when Dosaku does the *Task*, what it is actually doing is running the *Module* 
 program. 
 
 Following the above Chat example, you can see what Module was loaded with:
