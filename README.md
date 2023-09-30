@@ -203,16 +203,16 @@ config = Config()
 config['API_KEYS']['CLIPDROP']  # Should show your API key
 ```
 
-Once your API key is set up, you may enable Dosaku to use services with:
+Once your API key is set up, you may use services with:
 
 ```python
-from dosaku import Dosaku
+from dosaku import Agent
 
-dosk = Dosaku()
-dosk.learn('TextToImage', module='ClipdropTextToImage')  # RuntimeError
+agent = Agent()
+agent.learn('TextToImage', module='ClipdropTextToImage')  # RuntimeError
 ```
 
-Which will throw an error by default: 
+Which will *not* work by default, instead throwing an import error: 
 
 ```text 
 Loaded module was a service, but services have not been enabled. Enable services or load a non-service module.
@@ -240,6 +240,11 @@ machine, where they will subsequently run. And, definitely, only use services yo
 using them costs. There are no limits within Dosaku itself— so before you request a million images from the Clipdrop
 service, it would be a good idea to [look at their pricing](https://clipdrop.co/apis/pricing). Currently, processing a
 single text-to-image request is approximately 10 cents (USD 0.10) after any initial free credits. 
+
+In other words, if you haven't signed up to a third party service, given them your credit card number, and copied the
+associated API key into your Dosaku config file, nothing will cost money and, hopefully, the worst that can happen is 
+you download a model too big for your machine and your crash it. If you have done those things, because you 
+want to use e.g. ChatGPT, then you are completely responsible for how much money Dosaku spends using those services. 
 
 With that, in order to continue, you may enable services, and then learn and use text-to-image with:
 
