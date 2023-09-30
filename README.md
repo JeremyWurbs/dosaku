@@ -173,7 +173,7 @@ agent.registered_modules('Chat')  # ['EchoBot', 'RedPajama', ...]
 ```
 
 **A warning before continuing**: from here on out the modules we will be loading will download large AI models (~5-10GB 
-each) and attempting to run them on a cuda-enabled GPU on your machine. The process will be automatic, and all the 
+each) and attempt to run them on (a cuda-enabled GPU) on your machine. The process will be automatic, and all the 
 models here will be well-known models (RedPajama, Stable Diffusion) from well-known providers 
 ([Together AI](https://together.ai/), Stability AI) from a well-known model hub (Huggingface). These models are 
 well-tested and trustworthy, but if you have not used Huggingface before, or don't have a lot of disk space, or don't 
