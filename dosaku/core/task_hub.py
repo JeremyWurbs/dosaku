@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 from dosaku import TaskInfo
 
@@ -16,16 +16,22 @@ class TaskHub:
             raise ValueError(f'A task with the name {task} has not been registered.')
         return self.tasks[task].api
 
+    def doc(self, task: str, action: Optional[str] = None) -> str:
+        if action is None:
+            return self.tasks[task].docs[task]
+        else:
+            return self.tasks[task].docs[action]
+
     def registered_modules(self, task: str) -> List[str]:
         if task not in self.tasks:
             raise ValueError(f'A task with the name {task} has not been registered.')
         return self.tasks[task].modules
 
-    def register_task(self, task: str, api: List[Callable]):
+    def register_task(self, task: str, api: List[str], docs: Optional[Dict[str, str]] = None):
         print(f'Attempting to register a task named {task}.')
         if task in self.tasks:
             raise ValueError(f'A task with the name {task} has already been registered. It will not be registered again.')
-        self._tasks[task] = TaskInfo(name=task, api=api)
+        self._tasks[task] = TaskInfo(name=task, api=api, docs=docs)
 
     def register_module(self, module: str, tasks: Union[str, List[str]]):
         print(f'Attempting to register a module named {module}.')

@@ -1,15 +1,21 @@
 from __future__ import annotations
-from typing import Callable, List, Optional, Union, TYPE_CHECKING
+from typing import Dict, List, Optional, Union, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from dosaku import Module
 
 
 class TaskInfo:
-    def __init__(self, name, api: List[Callable], modules: Union[str, Module, List[str], List[Module]] = None):
+    def __init__(
+            self,
+            name: str,
+            api: List[str],
+            docs: Optional[Dict[str, str]] = None,
+            modules: Union[str, Module, List[str], List[Module]] = None):
         self.name: str = name
-        self.api: List[Callable] = api
-        self.modules: Optional[List[str]] = None
+        self.api: List[str] = api
+        self.docs: Dict[str, str] = docs
+        self.modules: Optional[List[str]] = modules
 
         if modules is not None:
             if isinstance(modules, str):

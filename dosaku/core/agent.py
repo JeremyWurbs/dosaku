@@ -2,6 +2,7 @@ from typing import Dict, List, Optional, Union
 
 from dosaku import Config, Task, task_hub, module_manager
 from dosaku.core.action import Action
+from dosaku import tasks  # Do not remove: allows all tasks in the dosaku.tasks namespace to register themselves
 from dosaku import modules  # Do not remove: allows all modules in the dosaku.modules namespace to register themselves
 
 
@@ -20,7 +21,11 @@ class Agent:
 
     @classmethod
     def api(cls, task: str):
-        cls.task_hub.api(task)
+        return cls.task_hub.api(task)
+
+    @classmethod
+    def doc(cls, task: str, action: Optional[str] = None):
+        return cls.task_hub.doc(task=task, action=action)
 
     @property
     def learnable_tasks(self):
@@ -30,26 +35,21 @@ class Agent:
     def tasks(self):
         return list(self._known_tasks.keys())
 
-    @property
-    def methods(self):
-        #TODO: get this to properly scope methods to their Task
-        return [_methods for _methods in self._known_tasks.values()]
-
     def registered_modules(self, task: str):
         return self.task_hub.registered_modules(task)
 
     def loaded_modules(self):
         return self.module_manager.modules
 
-    @property
-    def services_enabled(self):
-        return self._allow_services
-
     def enable_services(self):
         self._allow_services = True
 
     def disable_services(self):
         self._allow_services = False
+
+    @property
+    def services_enabled(self):
+        return self._allow_services
 
     def learn(self, task: Union[str, Task], module: Optional[str] = None, force_relearn=False, **kwargs):
         if isinstance(task, Task):
@@ -68,7 +68,6 @@ class Agent:
         except RuntimeError as err:
             raise err
 
-        api = self.task_hub.api(task)
         setattr(self, task, Action())
         for method in self.task_hub.api(task):
             module_attr = self.module_manager.get_module_attr(module, method)
