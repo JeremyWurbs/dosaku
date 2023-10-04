@@ -1,3 +1,4 @@
+pytest>=7.4.2
 huggingface-hub>=0.17.1
 accelerate>=0.23.0
 torch>=2.0.1
