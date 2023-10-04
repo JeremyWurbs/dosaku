@@ -6,3 +6,4 @@ from dosaku.modules.samples.chat.red_pajama import RedPajama
 from dosaku.modules.stability.clipdrop.text_to_image import ClipdropTextToImage
 from dosaku.modules.stability.sd_official import StableDiffusion
 from dosaku.modules.ultralytics.yolo8 import Yolo8
+from dosaku.modules.meta.sam import SegmentAnything
