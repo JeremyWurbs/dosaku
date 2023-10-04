@@ -9,3 +9,5 @@ opencv-python>=4.8.1.78
 matplotlib>=3.7.3
 gradio>=3.45.2
 openai>=0.28.1
+ultralytics>=8.0.192
+supervision>=0.14.0
