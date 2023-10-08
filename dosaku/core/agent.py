@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional, Union
 
 from dosaku import Config, Task, task_hub, module_manager
-from dosaku.core.action import Action
+from dosaku.core.actor import Actor
 from dosaku import tasks  # Do not remove: allows all tasks in the dosaku.tasks namespace to register themselves
 from dosaku import modules  # Do not remove: allows all modules in the dosaku.modules namespace to register themselves
 
@@ -68,8 +68,19 @@ class Agent:
         except RuntimeError as err:
             raise err
 
-        setattr(self, task, Action())
+        # We need to create a new Actor class here to be able to define new class methods, e.g. __call__. If we don't
+        # create new class, every module that overwrites class methods will be overwriting each other.
+        class _Actor(Actor):
+            def __init__(self):
+                super().__init__()
+
+        setattr(self, task, _Actor())
         for method in self.task_hub.api(task):
             module_attr = self.module_manager.get_module_attr(module, method)
-            setattr(getattr(self, task), method, module_attr)
+            if '__' in module_attr.__name__:
+                actor_class = type(getattr(self, task))
+                setattr(actor_class, method, classmethod(module_attr))
+            else:
+                actor_object = getattr(self, task)
+                setattr(actor_object, method, module_attr)
         self._known_tasks[task] = self.task_hub.api(task)

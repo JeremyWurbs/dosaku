@@ -5,11 +5,11 @@ from dosaku import TaskInfo
 
 class TaskHub:
     def __init__(self):
-        self._tasks: Dict[str, TaskInfo] = {}
+        self._tasks_info: Dict[str, TaskInfo] = {}
 
     @property
     def tasks(self):
-        return self._tasks
+        return self._tasks_info
 
     def api(self, task: str):
         if task not in self.tasks:
@@ -31,7 +31,7 @@ class TaskHub:
         print(f'Attempting to register a task named {task}.')
         if task in self.tasks:
             raise ValueError(f'A task with the name {task} has already been registered. It will not be registered again.')
-        self._tasks[task] = TaskInfo(name=task, api=api, docs=docs)
+        self._tasks_info[task] = TaskInfo(name=task, api=api, docs=docs)
 
     def register_module(self, module: str, tasks: Union[str, List[str]]):
         print(f'Attempting to register a module named {module}.')
