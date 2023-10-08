@@ -191,7 +191,7 @@ dosk.learn('Chat', module='RedPajama')
 Services are modules that are run through the interwebs. OpenAI's ChatGPT is a service, as is Stability AI's Clipdrop
 (image generation) API. 
 
-To use services, you must provide the appropriate API keys in your [config.ini](dosaku/config/config.ini) file. To 
+To use services, you must provide the appropriate API keys in your [config.ini](dosaku/config/_config.ini) file. To 
 use Stable Diffusion through Clipdrop, for example, first go to [https://clipdrop.co/apis](https://clipdrop.co/apis),
 sign up and obtain an API key. Place this key in your config file under the CLIPDROP API key. You can access this API 
 key programmatically with the following:
