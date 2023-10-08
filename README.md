@@ -236,14 +236,14 @@ Comparing Modules and Services:
 |                                  Computation location |  Local  | Interwebs |
 
 In general, only use modules you trust, as they are likely downloading data (AI models with associated weights) to your
-machine, where they will subsequently run. And, definitely, only use services you trust and understand how much money 
-using them costs. There are no limits within Dosaku itself— so before you request a million images from the Clipdrop
-service, it would be a good idea to [look at their pricing](https://clipdrop.co/apis/pricing). Currently, processing a
+machine, where they will subsequently be run. And, definitely, only use services you trust *and* understand how much 
+money using them costs. There are no limits within Dosaku itself— so before you request a million images from the 
+Clipdrop service, it would be a good idea to [look at their pricing](https://clipdrop.co/apis/pricing). Currently, processing a
 single text-to-image request is approximately 10 cents (USD 0.10) after any initial free credits. 
 
 In other words, if you haven't signed up to a third party service, given them your credit card number, and copied the
 associated API key into your Dosaku config file, nothing will cost money and, hopefully, the worst that can happen is 
-you download a model too big for your machine and your crash it. If you have done those things, because you 
+you download a model too big for your machine and you crash it. If you have done those things, because you 
 want to use e.g. ChatGPT, then you are completely responsible for how much money Dosaku spends using those services. 
 
 With that, in order to continue, you may enable services, and then learn and use text-to-image with:
