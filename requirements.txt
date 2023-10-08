@@ -9,3 +9,4 @@ opencv-python>=4.8.1.78
 matplotlib>=3.7.3
 gradio>=3.45.2
 openai>=0.28.1
+katrain==1.7.2
