@@ -1,3 +1,5 @@
+# Reference sample for creating a Module and registering it to a pre-existing Task.
+
 from typing import List, Optional
 
 from dosaku import Module
