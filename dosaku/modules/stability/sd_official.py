@@ -25,12 +25,14 @@ class StableDiffusion(Module):
 
         from dosaku import Agent
 
+        agent = Agent()
         agent.learn('StableDiffusion', model_version='1.5')
         image = agent.StableDiffusion('an astronaut riding a horse').images[0]
         image.show()
 
     .. image:: sample_resources/stable_diffusion.png
     """
+    name = 'StableDiffusion'
 
     class Models(str, Enum):
         """List of supported Stable Diffusion versions."""
@@ -111,3 +113,4 @@ class StableDiffusion(Module):
 
 StableDiffusion.register_action('__call__')
 StableDiffusion.register_task('StableDiffusion')
+StableDiffusion.register_task('TextToImage')

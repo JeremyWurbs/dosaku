@@ -1,6 +1,7 @@
 pytest>=7.4.2
 huggingface-hub>=0.17.1
 accelerate>=0.23.0
+xformers>=0.0.22
 torch>=2.0.1
 torchaudio>=2.0.2
 torchvision>=0.15.2
