@@ -10,5 +10,9 @@ class YamlSerializer(JsonSerializer):
     def serializer(self, song: Song) -> Song:
         return yaml.dump(super().serialize(song))
 
+    def __call__(self, song: Song) -> str:
+        return self.serialize(song)
 
+
+YamlSerializer.register_action('__call__')
 YamlSerializer.register_task('SongSerializer')

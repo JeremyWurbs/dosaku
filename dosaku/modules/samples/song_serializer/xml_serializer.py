@@ -18,5 +18,9 @@ class XmlSerializer(Module):
         artist.text = song.artist
         return et.tostring(song_info, encoding='unicode')
 
+    def __call__(self, song: Song) -> str:
+        return self.serialize(song)
 
+
+XmlSerializer.register_action('__call__')
 XmlSerializer.register_task('SongSerializer')

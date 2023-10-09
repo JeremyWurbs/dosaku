@@ -23,6 +23,7 @@ class SongSerializer(Task):
     @classmethod
     @abstractmethod
     def __call__(cls, song: Song) -> str:
+        """Utility method to call serialize()."""
         raise NotImplementedError
 
 
