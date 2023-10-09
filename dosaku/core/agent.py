@@ -79,7 +79,7 @@ class Agent:
             module_attr = self.module_manager.get_module_attr(module, method)
             if '__' in module_attr.__name__:
                 actor_class = type(getattr(self, task))
-                setattr(actor_class, method, classmethod(module_attr))
+                setattr(actor_class, method, module_attr)
             else:
                 actor_object = getattr(self, task)
                 setattr(actor_object, method, module_attr)

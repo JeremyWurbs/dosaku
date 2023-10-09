@@ -19,6 +19,7 @@ class Sabaki(Module):
         """Stop and close the Sabaki GUI."""
         if self.process is not None:
             self.process.kill()
+            self.process = None
 
     def __call__(self, *args, **kwargs):
         self.start(**kwargs)

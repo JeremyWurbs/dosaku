@@ -20,5 +20,10 @@ class SongSerializer(Task):
     def serialize(self, song: Song) -> str:
         raise NotImplementedError
 
+    @classmethod
+    @abstractmethod
+    def __call__(cls, song: Song) -> str:
+        raise NotImplementedError
+
 
 SongSerializer.register_task()

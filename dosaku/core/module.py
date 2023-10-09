@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Callable, Dict, List, Optional, Union
 
@@ -5,21 +6,18 @@ from dosaku import Task, task_hub, module_manager
 
 
 class Module(ABC):
-    api_task_actions: Dict[str, str] = dict()
-    dependencies: List[str] = list()  # List of module dependencies
-
     @property
     @abstractmethod
-    def name(self):
+    def name(self) -> str:
         raise NotImplementedError
 
     @property
-    def is_service(self):
+    def is_service(self) -> bool:
         return False
 
     @classmethod
-    def api(cls):
-        return cls.api_task_actions
+    def api(cls) -> Optional[Dict[str, str]]:
+        return getattr(cls, 'api_task_actions', None)
 
     @classmethod
     def docs(cls) -> Dict[str, str]:
@@ -30,11 +28,27 @@ class Module(ABC):
 
     @classmethod
     def register_action(cls, func: Union[str, Callable], doc: Optional[str] = None):
+        if getattr(cls, 'api_task_actions', None) is None:
+            cls.api_task_actions: Dict[str, str] = dict()
+
         if isinstance(func, Callable):
             func = func.__name__
             if doc is None:
                 doc = func.__doc__
         cls.api_task_actions[func] = doc
+
+    @classmethod
+    def register_dependency(cls, dependency: Union[str, Module]):
+        if isinstance(dependency, Module):
+            dependency = dependency.name
+        if getattr(cls, '_dependencies', None) is None:
+            cls._dependencies: List[str] = list()
+        cls._dependencies.append(dependency)
+
+    @classmethod
+    @property
+    def dependencies(cls):
+        return getattr(cls, '_dependencies', list())
 
     @classmethod
     def register_module(cls):

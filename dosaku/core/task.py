@@ -5,7 +5,7 @@ from dosaku import Actor, task_hub
 
 
 class Task(ABC):
-    api_concrete_methods = list()
+    #api_concrete_methods = list()
 
     @property
     @abstractmethod
@@ -14,7 +14,9 @@ class Task(ABC):
 
     @classmethod
     def api(cls) -> List[str]:
-        return cls.api_concrete_methods + list(cls.__abstractmethods__)
+        api_concrete_methods = getattr(cls, 'api_concrete_methods', list())
+        return api_concrete_methods + list(cls.__abstractmethods__)
+        #return list(cls.__abstractmethods__)
 
     @classmethod
     def docs(cls) -> Dict[str, str]:

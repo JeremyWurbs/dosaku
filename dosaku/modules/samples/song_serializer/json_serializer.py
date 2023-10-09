@@ -18,5 +18,11 @@ class JsonSerializer(Module):
         }
         return json.dumps(song_info)
 
+    def __call__(self, song: Song) -> str:
+        print(f'self: {type(self)}')
+        print(f'song: {type(song)}')
+        return self.serialize(song)
 
+
+JsonSerializer.register_action('__call__')
 JsonSerializer.register_task(task='SongSerializer')
