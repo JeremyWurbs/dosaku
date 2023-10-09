@@ -15,10 +15,11 @@ import torch.nn as nn
 from torchvision.transforms.functional import normalize
 
 from dosaku import Config, Module
+from dosaku.tasks.restore_faces import RestoredImage
 from dosaku.utils import ifnone, pil_to_cv2, cv2_to_pil
 
 
-class GFPGAN1p4(Module):
+class GFPGAN(Module):
     """Face restorer pipeline using GFPGAN v1.4.
 
     GFPGAN is a GAN model (i.e. **not** a diffusion model) used to restore faces. It can be very useful to use as a
@@ -66,6 +67,7 @@ class GFPGAN1p4(Module):
 
     .. image:: sample_resources/modules_gfpgan1p4.png
     """
+    name = 'GFPGAN'
     config = Config()
 
     def __init__(self,
@@ -74,8 +76,10 @@ class GFPGAN1p4(Module):
                  upscale: float = 2.,
                  arch: str = 'clean',
                  channel_multiplier: int = 2,
-                 background_upsampler: Optional[nn.Module] = None):
+                 background_upsampler: Optional[nn.Module] = None,
+                 device: str = 'cuda'):
         super().__init__()
+        self.device = device
 
         model_save_dir = ifnone(model_save_dir, self.config['MODELS']['GFPGAN_DIR'])
 
@@ -150,7 +154,7 @@ class GFPGAN1p4(Module):
         self.background_sampler = background_upsampler
 
     @torch.no_grad()
-    def __call__(
+    def restore(
             self,
             image: Image,
             aligned: bool = False,
@@ -158,7 +162,7 @@ class GFPGAN1p4(Module):
             bool = False,
             paste_back: bool = True,
             weight: float = 0.5
-            ) -> Tuple[List[Image], List[Image], Image]:
+            ) -> RestoredImage:
         """Run the pipeline.
 
         Args:
@@ -206,8 +210,10 @@ class GFPGAN1p4(Module):
         cropped_faces = [cv2_to_pil(face) for face in self.face_helper.cropped_faces]
         restored_faces = [cv2_to_pil(restored_face) for restored_face in self.face_helper.restored_faces]
 
-        return cropped_faces, restored_faces, restored_image
+        return RestoredImage(restored_image, cropped_faces, restored_faces)
+
+    def __call__(self, *args, **kwargs):
+        return self.restore(*args, **kwargs)
 
 
-GFPGAN1p4.register_action('__call__')
-GFPGAN1p4.register_task('GFPGAN1p4')
+GFPGAN.register_task('RestoreFaces')

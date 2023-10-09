@@ -9,4 +9,3 @@ from dosaku.core.task import Task
 from dosaku.core.module import Module
 from dosaku.core.service import Service
 from dosaku.core.agent import Agent
-from dosaku.modules.go import kt

@@ -1,6 +1,9 @@
-from typing import Dict, List, Optional, Union
+from __future__ import annotations
+from typing import Dict, List, Optional, Union, TYPE_CHECKING
 
 from dosaku import TaskInfo
+if TYPE_CHECKING:
+    from dosaku import Module
 
 
 class TaskHub:
@@ -33,8 +36,8 @@ class TaskHub:
             raise ValueError(f'A task with the name {task} has already been registered. It will not be registered again.')
         self._tasks_info[task] = TaskInfo(name=task, api=api, docs=docs)
 
-    def register_module(self, module: str, tasks: Union[str, List[str]]):
-        print(f'Attempting to register a module named {module}.')
+    def register_module(self, module: Union[str, Module], tasks: Union[str, List[str]]):
+        print(f'Attempting to register module {module}.')
         if isinstance(tasks, str):
             tasks = [tasks]
         for task in tasks:
