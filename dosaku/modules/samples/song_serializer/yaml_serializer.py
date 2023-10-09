@@ -14,5 +14,4 @@ class YamlSerializer(JsonSerializer):
         return self.serialize(song)
 
 
-YamlSerializer.register_action('__call__')
 YamlSerializer.register_task('SongSerializer')

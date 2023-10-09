@@ -22,5 +22,4 @@ class XmlSerializer(Module):
         return self.serialize(song)
 
 
-XmlSerializer.register_action('__call__')
 XmlSerializer.register_task('SongSerializer')

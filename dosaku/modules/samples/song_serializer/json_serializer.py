@@ -22,5 +22,4 @@ class JsonSerializer(Module):
         return self.serialize(song)
 
 
-JsonSerializer.register_action('__call__')
 JsonSerializer.register_task(task='SongSerializer')
