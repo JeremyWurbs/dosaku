@@ -23,5 +23,11 @@ class ObjectDetection(Task):
             The detected objects. The exact return type will differ by module implementation.
         """
 
+    @classmethod
+    @abstractmethod
+    def __call__(cls, image: Image, **kwargs) -> Any:
+        """Utility method to call detect()."""
+        raise NotImplementedError
+
 
 ObjectDetection.register_task()

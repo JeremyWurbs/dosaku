@@ -19,6 +19,7 @@ class SegmentAnything(Module):
         sam_type: The model type to use. One of {'vit_h', 'vit_l', 'vit_b'}. Refer to the official
         `github <https://github.com/facebookresearch/segment-anything#model-checkpoints>`_ page for more information.
     """
+    name = 'SegmentAnything'
     config = Config()
 
     def __init__(self, model_path: Optional[str] = None, sam_type: str = 'vit_h', device='cuda'):
@@ -52,16 +53,18 @@ class SegmentAnything(Module):
         Example::
 
             from PIL import Image
-            from dosaku import YoloNAS, SegmentAnything
-            from dosaku.utils import pil_to_cv2, cv2_to_pil, draw_images
+            from dosaku import Agent
+            from dosaku.utils import draw_images
 
             image = Image.open('tests/resources/hopper.png')
-            yolo = YoloNAS()
-            sam = SegmentAnything()
 
-            detections = yolo(image)
+            agent = Agent()
+            agent.learn('ObjectDetection')
+            agent.learn('SegmentAnything')
+
+            detections = agent.ObjectDetection(image)
             detections = detections[detections.class_id == 0]  # Get bounding boxes just for "person"
-            mask = sam.compute_mask(bbox=detections.xyxy.astype('int'), image=image)
+            mask = agent.SegmentAnything.compute_mask(bbox=detections.xyxy.astype('int'), image=image)
 
             draw_images((image, mask), labels=('Original Image', 'Generated Mask'))
 

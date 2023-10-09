@@ -42,9 +42,9 @@ class Yolo8(Module):
         detections = self.model.predict(image, verbose=False)[0]
         return sv.Detections.from_ultralytics(detections)
 
-    def __call__(self, image: Image) -> sv.Detections:
+    def __call__(self, image: Image, **kwargs) -> sv.Detections:
         return self.detect(image)
 
 
 Yolo8.register_task('ObjectDetection')
-Yolo8.register_task('SVObjectDetection')
+Yolo8.register_task('ObjectDetectionSV')
