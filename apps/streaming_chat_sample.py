@@ -16,7 +16,7 @@ def predict(message, history):
 
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
-        messages= history_openai_format,
+        messages=history_openai_format,
         temperature=1.0,
         stream=True
     )
