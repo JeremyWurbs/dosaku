@@ -66,6 +66,7 @@ class GFPGAN1p4(Module):
 
     .. image:: sample_resources/modules_gfpgan1p4.png
     """
+    name = 'GFPGAN1p4'
     config = Config()
 
     def __init__(self,
