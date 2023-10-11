@@ -52,7 +52,7 @@ class Module(ABC):
 
     @classmethod
     def register_module(cls):
-        module_manager.register_builder(module=cls.name, builder=cls, dependencies=cls.dependencies)
+        module_manager.register_builder(module=cls.name, builder=cls, dependencies=getattr(cls, '_dependencies', list()))
 
     @classmethod
     def register_task(cls, task: str):

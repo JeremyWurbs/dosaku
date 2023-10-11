@@ -12,8 +12,9 @@ class EchoBot(Module):
         super().__init__()
 
     def chat(self, message: str) -> str:
-        return f'Hi, I\'m EchoBot.'
+        return f'Hi, I\'m EchoBot. You said: \"{message}\".'
 
+    """
     def predict(
             self,
             message: str,
@@ -23,7 +24,7 @@ class EchoBot(Module):
     ) -> str:
         response = f"Hello {message}! I\'m EchoBot."
         return response[: min(len(response), tokens)]
-
+    """
 
 EchoBot.register_task(task='Chat')
-EchoBot.register_task(task='GradioChat')
+#EchoBot.register_task(task='GradioChat')

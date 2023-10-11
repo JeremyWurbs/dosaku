@@ -13,3 +13,4 @@ from dosaku.modules.ultralytics.yolo8 import Yolo8
 from dosaku.modules.meta.sam import SegmentAnything
 from dosaku.modules.tencent.gfpgan import GFPGAN
 from dosaku.modules.kakao.karlo import KarloImageBlend
+from dosaku.modules.pondered.tic_tac_toe import TicTacToeModule
