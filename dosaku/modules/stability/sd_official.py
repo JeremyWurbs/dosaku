@@ -1,5 +1,6 @@
 """Wrapper class around the official Stable Diffusion pipelines from diffusers."""
 from enum import Enum
+from typing import Optional, Union
 
 from diffusers import DiffusionPipeline
 
@@ -49,8 +50,8 @@ class StableDiffusion(Module):
 
     def __init__(
             self,
-            model_version: [str | Models | None] = '1.5',
-            model_name: [str | None] = None,
+            model_version: Optional[Union[str, Models]] = '1.5',
+            model_name: Optional[str] = None,
             device: str = 'cuda',
             variant: str = 'fp16',
             use_safetensors: bool = True,
@@ -62,30 +63,29 @@ class StableDiffusion(Module):
         if model_name is not None:
             self.model_name = model_name
         else:
-            match model_version:
-                case '1.1':
-                    self.model_name = 'CompVis/stable-diffusion-v1-1'
-                case '1.2':
-                    self.model_name = 'CompVis/stable-diffusion-v1-2'
-                case '1.3':
-                    self.model_name = 'CompVis/stable-diffusion-v1-3'
-                case '1.4':
-                    self.model_name = 'CompVis/stable-diffusion-v1-4'
-                case '1.5':
-                    self.model_name = 'runwayml/stable-diffusion-v1-5'
-                case '2':
-                    self.model_name = 'stabilityai/stable-diffusion-2'
-                case '2.1':  # 768x768 Version
-                    self.model_name = 'stabilityai/stable-diffusion-2-1'
-                case '2.1BASE':  # 512x512 Version
-                    self.model_name = 'stabilityai/stable-diffusion-2-1-base'
-                case 'XLBASE':
-                    self.model_name = 'stabilityai/stable-diffusion-xl-base-1.0'
-                case 'XLREFINER':
-                    self.model_name = 'stabilityai/stable-diffusion-xl-refiner-1.0'
-                case _:
-                    raise NotImplementedError(f'Unknown model_version {model_version}. Pass in the model_name for this '
-                                              f'model to use.')
+            if model_version == '1.1':
+                self.model_name = 'CompVis/stable-diffusion-v1-1'
+            elif model_version == '1.2':
+                self.model_name = 'CompVis/stable-diffusion-v1-2'
+            elif model_version == '1.3':
+                self.model_name = 'CompVis/stable-diffusion-v1-3'
+            elif model_version == '1.4':
+                self.model_name = 'CompVis/stable-diffusion-v1-4'
+            elif model_version == '1.5':
+                self.model_name = 'runwayml/stable-diffusion-v1-5'
+            elif model_version == '2':
+                self.model_name = 'stabilityai/stable-diffusion-2'
+            elif model_version == '2.1':  # 768x768 Version
+                self.model_name = 'stabilityai/stable-diffusion-2-1'
+            elif model_version == '2.1BASE':  # 512x512 Version
+                self.model_name = 'stabilityai/stable-diffusion-2-1-base'
+            elif model_version == 'XLBASE':
+                self.model_name = 'stabilityai/stable-diffusion-xl-base-1.0'
+            elif model_version == 'XLREFINER':
+                self.model_name = 'stabilityai/stable-diffusion-xl-refiner-1.0'
+            else:
+                raise NotImplementedError(f'Unknown model_version {model_version}. Pass in the model_name for this '
+                                          f'model to use.')
 
         self.model = DiffusionPipeline.from_pretrained(
             self.model_name,

@@ -1,5 +1,5 @@
 from PIL.Image import Image
-from typing import List, Optional, Tuple
+from typing import Optional
 import os
 
 from basicsr.utils import img2tensor, tensor2img
