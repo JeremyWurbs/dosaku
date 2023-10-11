@@ -6,5 +6,6 @@ from dosaku.tasks.gtp_v1 import GoTextProtocolV1
 from dosaku.tasks.object_detection.object_detection import ObjectDetection
 from dosaku.tasks.object_detection.sv_object_detection import ObjectDetectionSV
 from dosaku.tasks.restore_faces import RestoreFaces
-from dosaku.tasks.write_task import WriteTask
-from dosaku.tasks.write_module import WriteModule
+from dosaku.tasks.dosaku.write_task import WriteTask
+from dosaku.tasks.dosaku.write_module import WriteModule
+from dosaku.tasks.dosaku.write_module_from_task import WriteModuleFromTask

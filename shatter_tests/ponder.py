@@ -9,4 +9,11 @@ def test_ponder():
                      'input command. The make_ai_move should select a move to play on the board (for whoever\'s turn '
                      'it is) automatically. There may be additional helper methods added (for example to show_board) '
                      'as desired.')
-    ponderer.write_task(task_reqs=new_task_reqs, write_to_file=True)
+    ponderer.write_task(task_reqs=new_task_reqs, write_to_file=True, filename='tic_tac_toe.py')
+
+    new_module_reqs = ('Implementation to play a game of tic tac toe. There should be one human player and one AI '
+                       'player. The human player should enter their moves, 1-9, as standard keyboard input. Between'
+                       'each move the board should print to screen. At the end of the game the result of the game should'
+                       'be shown: either Human Wins, AI Wins, or Draw.')
+    ponderer.write_module_from_task(
+        task_filename='tic_tac_toe.py', module_reqs=new_module_reqs, write_to_file=True, filename='tic_tac_toe.py')
