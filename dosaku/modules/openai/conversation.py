@@ -1,3 +1,5 @@
+import copy
+
 import openai
 
 from dosaku import Config, Service
@@ -13,24 +15,31 @@ class OpenAIConversation(Service):
         self.history = None
         self.clear_chat()
 
-    def message(self, message: str, stream: bool = False):
-        self.history.append({'role': 'user', 'content': message})
+    def message(self, message: str, stream: bool = False, record_interaction: bool = True):
+        if record_interaction:
+            self.history.append({'role': 'user', 'content': message})
+            history = self.history
+        else:
+            history = copy.deepcopy(self.history)
+            history.append({'role': 'user', 'content': message})
 
         response = openai.ChatCompletion.create(
             model=self.model,
-            messages=self.history,
+            messages=history,
             temperature=1.0,
             stream=stream
         )['choices'][0]['message']['content']
-        self.history.append({'role': 'assistant', 'content': response})
+
+        if record_interaction:
+            self.history.append({'role': 'assistant', 'content': response})
 
         return response
 
     def clear_chat(self):
         self.history = [{'role': 'system', 'content': self.system_prompt}]
 
-    def __call__(self, message: str):
-        return self.message(message)
+    def __call__(self, message: str, **kwargs):
+        return self.message(message, **kwargs)
 
     def __str__(self):
         conv_str = ''

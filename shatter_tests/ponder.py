@@ -2,7 +2,7 @@ from dosaku.modules.dosaku.ponder import Ponder
 
 
 def test_ponder():
-    ponderer = Ponder()
+    ponderer = Ponder(model='gpt-3.5-turbo')
 
     new_task_reqs = ('Interface to play a game of tic tac toe, including methods new_game, make_human_move, '
                      'make_ai_move and show_board. The new_game method should start a new game and play through it '
