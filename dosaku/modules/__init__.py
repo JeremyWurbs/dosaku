@@ -1,4 +1,5 @@
 from dosaku.modules.dosaku.ponder import Ponder
+from dosaku.modules.openai.chat import OpenAIChat
 from dosaku.modules.samples.song_serializer.json_serializer import JsonSerializer
 from dosaku.modules.samples.song_serializer.xml_serializer import XmlSerializer
 from dosaku.modules.samples.song_serializer.yaml_serializer import YamlSerializer
@@ -13,4 +14,4 @@ from dosaku.modules.ultralytics.yolo8 import Yolo8
 from dosaku.modules.meta.sam import SegmentAnything
 from dosaku.modules.tencent.gfpgan import GFPGAN
 from dosaku.modules.kakao.karlo import KarloImageBlend
-#from dosaku.modules.pondered.tic_tac_toe import TicTacToeGame
+#from dosaku.modules.pondered.tic_tac_toe import TicTacToeAI

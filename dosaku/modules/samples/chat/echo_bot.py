@@ -11,8 +11,11 @@ class EchoBot(Module):
     def __init__(self):
         super().__init__()
 
-    def chat(self, message: str) -> str:
+    def message(self, message: str) -> str:
         return f'Hi, I\'m EchoBot. You said: \"{message}\".'
+
+    def __call__(self, *args, **kwargs):
+        return self.message(*args, **kwargs)
 
     """
     def predict(

@@ -19,8 +19,11 @@ class RedPajama(Module):
             torch_dtype=torch.float16
         ).to(device)
 
-    def chat(self, message: str) -> str:
+    def message(self, message: str) -> str:
         raise NotImplementedError('I have lied. I have not implemented this method.')
+
+    def __call__(self, *args, **kwargs):
+        return self.message(*args, **kwargs)
 
     def predict(
             self,

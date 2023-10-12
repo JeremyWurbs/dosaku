@@ -5,8 +5,8 @@ import openai
 from dosaku import Config, Service
 
 
-class OpenAIConversation(Service):
-    name = 'OpenAIConversation'
+class OpenAIChat(Service):
+    name = 'OpenAIChat'
     config = Config()
 
     def __init__(self, system_prompt: str = 'You are a helpful assistant.', model='gpt-3.5-turbo'):
@@ -48,7 +48,8 @@ class OpenAIConversation(Service):
         return conv_str
 
 
-OpenAIConversation.register_action('message')
-OpenAIConversation.register_action('clear_chat')
-OpenAIConversation.register_action('__call__')
-OpenAIConversation.register_task('OpenAIConversation')
+OpenAIChat.register_action('message')
+OpenAIChat.register_action('clear_chat')
+OpenAIChat.register_action('__call__')
+OpenAIChat.register_task('OpenAIChat')
+OpenAIChat.register_task('Chat')

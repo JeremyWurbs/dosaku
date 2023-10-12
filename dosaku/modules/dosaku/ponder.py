@@ -4,7 +4,7 @@ from typing import Optional
 import openai
 
 from dosaku import Config, Service
-from dosaku.modules.openai.conversation import OpenAIConversation
+from dosaku.modules.openai.chat import OpenAIChat
 from dosaku.utils import ifnone
 
 
@@ -111,7 +111,7 @@ class Ponder(Service):
         openai.api_key = self.config['API_KEYS']['OPENAI']
         self.model = model
 
-    def _get_filename(self, conversation: OpenAIConversation) -> str:
+    def _get_filename(self, conversation: OpenAIChat) -> str:
         output_filename = conversation.message(
             'What is the name of the file you would put the above code into? Just give me the raw filename '
             'with no explanation.',
@@ -132,8 +132,8 @@ class Ponder(Service):
             task_reqs: str,
             write_to_file: bool = False,
             save_filename: str = None
-    ) -> OpenAIConversation:
-        conversation = OpenAIConversation(system_prompt=self.default_system_prompt, model=self.model)
+    ) -> OpenAIChat:
+        conversation = OpenAIChat(system_prompt=self.default_system_prompt, model=self.model)
         response = conversation.message(f'Write a Task class in line with the following instructions: {task_reqs}')
 
         if write_to_file:
@@ -144,17 +144,17 @@ class Ponder(Service):
 
     def write_module(
             self,
-            conversation: Optional[OpenAIConversation] = None,
+            conversation: Optional[OpenAIChat] = None,
             task_filename: Optional[str] = None,
             module_reqs: Optional[str] = None,
             write_to_file: bool = False,
             save_filename: Optional[str] = None
-    ) -> OpenAIConversation:
+    ) -> OpenAIChat:
         if task_filename is None and conversation is None:
             raise ValueError('At least one of task_filename or conversation must not be None, but both were.')
 
         if conversation is None:
-            conversation = OpenAIConversation(system_prompt=self.default_system_prompt, model=self.model)
+            conversation = OpenAIChat(system_prompt=self.default_system_prompt, model=self.model)
             task_str = self._load_file(Ponder.task_fullpath(task_filename))
             message = f'Write a Module class for the following Task class:\n\n\n{task_str}\n\n\n'
 
@@ -174,14 +174,14 @@ class Ponder(Service):
 
     def write_unit_test(
             self,
-            conversation: Optional[OpenAIConversation] = None,
+            conversation: Optional[OpenAIChat] = None,
             task_filename: Optional[str] = None,
             module_filename: Optional[str] = None,
             write_to_file: bool = False,
             save_filename: str = None
-    ) -> OpenAIConversation:
+    ) -> OpenAIChat:
         if conversation is None:
-            conversation = OpenAIConversation(system_prompt=self.default_system_prompt, model=self.model)
+            conversation = OpenAIChat(system_prompt=self.default_system_prompt, model=self.model)
             message = 'Write a set of pytest unit tests for the following task and module class.\n\n'
 
             if task_filename is not None:
@@ -204,12 +204,12 @@ class Ponder(Service):
 
     def write_sample(
             self,
-            conversation: Optional[OpenAIConversation] = None,
+            conversation: Optional[OpenAIChat] = None,
             task_filename: Optional[str] = None,
             module_filename: Optional[str] = None,
             write_to_file: bool = False,
             save_filename: Optional[str] = None
-    ) -> OpenAIConversation:
+    ) -> OpenAIChat:
         if conversation is None and (task_filename is None or module_filename is None):
             raise ValueError('Either a conversation or both task_filename and module_filename must be given.')
 
@@ -260,12 +260,12 @@ class Ponder(Service):
 
     def write_app(
             self,
-            conversation: Optional[OpenAIConversation] = None,
+            conversation: Optional[OpenAIChat] = None,
             task_filename: Optional[str] = None,
             module_filename: Optional[str] = None,
             write_to_file: bool = False,
             save_filename: str = None
-    ) -> OpenAIConversation:
+    ) -> OpenAIChat:
 
         if conversation is None and (task_filename is None or module_filename is None):
             raise ValueError('Either a conversation or both task_filename and module_filename must be given.')
@@ -333,12 +333,12 @@ class Ponder(Service):
 
         return conversation
 
-    def ponder_thought(
+    def ponder(
             self,
             reqs: str,
             save_filename: str,
             write_to_file: bool = False,
-    ) -> OpenAIConversation:
+    ) -> OpenAIChat:
         convo = self.write_task(task_reqs=reqs, write_to_file=write_to_file, save_filename=save_filename)
         convo = self.write_module(conversation=convo, write_to_file=write_to_file, save_filename=save_filename)
         convo = self.write_sample(conversation=convo, write_to_file=write_to_file, save_filename=save_filename)
@@ -347,7 +347,18 @@ class Ponder(Service):
 
         return convo
 
+    def __call__(self, *args, **kwargs):
+        return self.ponder(*args, **kwargs)
 
+
+Ponder.register_action(Ponder.write_task)
+Ponder.register_action(Ponder.write_module)
+Ponder.register_action(Ponder.write_sample)
+Ponder.register_action(Ponder.write_app)
+Ponder.register_action(Ponder.write_unit_test)
+Ponder.register_action(Ponder.ponder)
+Ponder.register_action(Ponder.__call__)
+Ponder.register_task('Ponder')
 Ponder.register_task('WriteTask')
 Ponder.register_task('WriteModule')
 Ponder.register_task('WriteModuleFromTask')

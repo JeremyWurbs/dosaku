@@ -11,7 +11,7 @@ class Chat(Task):
         super().__init__()
 
     @abstractmethod
-    def chat(self, message: str, **kwargs):
+    def message(self, message: str, **kwargs):
         """Send a message to the agent and get a response.
 
         It is up to the chat module whether a chat history is kept and used.
@@ -28,8 +28,12 @@ class Chat(Task):
 
             agent = Agent()
             agent.learn('Chat', module='EchoBot')
-            response = agent.Chat.chat('Hello!')  #
+            response = agent.Chat.message('Hello!')  #
         """
+
+    @abstractmethod
+    def __call__(self, *args, **kwargs):
+        return self.message(*args, **kwargs)
 
 
 Chat.register_task()
