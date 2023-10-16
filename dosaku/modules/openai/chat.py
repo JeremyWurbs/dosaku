@@ -1,4 +1,5 @@
 import copy
+from typing import Optional
 
 import openai
 
@@ -13,7 +14,7 @@ class OpenAIChat(Service):
     def __init__(
             self,
             system_prompt: str = 'You are a helpful assistant.',
-            model=None,
+            model: Optional[str] = None,
             stream: bool = False):
         openai.api_key = self.config['API_KEYS']['OPENAI']
         self.system_prompt = system_prompt
@@ -22,44 +23,55 @@ class OpenAIChat(Service):
         self.history = None
         self.clear_chat()
 
-    def message(self, message: str, record_interaction: bool = True):
+    def message(self, message: str, **kwargs):
+        if self.stream:  # return generator object that will stream response
+            return self._message_generator(message, **kwargs)
+        else:  # return str response directly
+            return self._message_return(message, **kwargs)
+
+    def _update_history(self, message: str, record_interaction: bool = True):
         if record_interaction:
             self.history.append({'role': 'user', 'content': message})
             history = self.history
         else:
             history = copy.deepcopy(self.history)
             history.append({'role': 'user', 'content': message})
+        return history
 
-        if self.stream:
-            response = openai.ChatCompletion.create(
-                model=self.model,
-                messages=history,
-                temperature=1.0,
-                stream=self.stream
-            )
+    def _message_return(self, message: str, record_interaction: bool = True):
+        history = self._update_history(message, record_interaction=record_interaction)
 
-            partial_message = ""
-            if record_interaction:
-                self.history.append({'role': 'assistant', 'content': partial_message})
-            for chunk in response:
-                if len(chunk['choices'][0]['delta']) != 0:
-                    partial_message = partial_message + chunk['choices'][0]['delta']['content']
-                    if record_interaction:
-                        self.history[-1]['content'] = partial_message
-                    yield partial_message
+        response = openai.ChatCompletion.create(
+            model=self.model,
+            messages=history,
+            temperature=1.0,
+            stream=False
+        )['choices'][0]['message']['content']
 
-        else:
-            response = openai.ChatCompletion.create(
-                model=self.model,
-                messages=history,
-                temperature=1.0,
-                stream=self.stream
-            )['choices'][0]['message']['content']
+        if record_interaction:
+            self.history.append({'role': 'assistant', 'content': response})
 
-            if record_interaction:
-                self.history.append({'role': 'assistant', 'content': response})
+        return response
 
-            return response
+    def _message_generator(self, message: str, record_interaction: bool = True):
+        history = self._update_history(message, record_interaction=record_interaction)
+
+        response = openai.ChatCompletion.create(
+            model=self.model,
+            messages=history,
+            temperature=1.0,
+            stream=True
+        )
+
+        partial_message = ""
+        if record_interaction:
+            self.history.append({'role': 'assistant', 'content': partial_message})
+        for chunk in response:
+            if len(chunk['choices'][0]['delta']) != 0:
+                partial_message = partial_message + chunk['choices'][0]['delta']['content']
+                if record_interaction:
+                    self.history[-1]['content'] = partial_message
+                yield partial_message
 
     def clear_chat(self):
         self.history = [{'role': 'system', 'content': self.system_prompt}]
