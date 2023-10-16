@@ -317,7 +317,8 @@ through any services you have enabled (by providing an associated API key into y
 acknowledge that you are responsible for what Dosaku does and, if you don't like what it is doing, it is open source 
 and, as such, you are free to change it to better suit your needs.
 
-With that, to enable services and continue, place your API key into your config file, and then create a simple chat app:
+With that, to enable services and continue, place your OpenAI API key into your config file, and then create a simple 
+chat app as follows:
 
 ```python
 import gradio as gr
