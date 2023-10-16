@@ -307,13 +307,14 @@ spends on your behalf.
 
 Note that if you haven't signed up to a third party service, given them your credit card number, and copied the
 associated API key into your Dosaku config file, nothing in Dosaku will cost money and, hopefully, the worst that can 
-happen is you download a model too big for your machine and you crash it. If you have done those things, however, 
+happen is you download a model too big for your machine and crash it. If you have done those things, however, 
 because you e.g. want to use ChatGPT to power Dosaku, then you are completely responsible for how much money Dosaku 
-spends using those services. Dosaku is made to be as autonomous as possible, and may be configured to make as many calls 
-as required to fulfill a given user query.
+spends using those services. 
 
-By continuing, you are implicitly acknowledging that you are willing to allow Dosaku to spend money through any services 
-you have enabled (by providing an associated API key into your config file). 
+Dosaku is made to be as autonomous as possible, and may be configured to make as many calls as required to fulfill a 
+given user query. By continuing, you are implicitly acknowledging that you are willing to allow Dosaku to spend money 
+through any services you have enabled (by providing an associated API key into your config file). If you don't like what 
+Dosaku is doing, it is open source, and you are free to change it to better suit your needs.
 
 With that, to enable services and continue, place your API key into your config file, and then create a simple chat app:
 
