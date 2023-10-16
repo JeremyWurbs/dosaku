@@ -211,18 +211,18 @@ note the general structure of Dosaku:
 As seen in the face restoration example above, modules are, in general, standalone python modules that can be used 
 independently of Dosaku, which may lead you to ask what, then, are Dosaku *agents* doing?
 
-Agents provide three key functionalities:
+Agents provide the following key functionalities:
 
-    1. They provide a chat-based interface for users to communicate with the agent; 
-    2. They manage the modules required to do the requested tasks;
-    3. They "understand" the Dosaku task-module system, able to write *new* modules for the user, which they can 
-    subsequently learn and use as any other module.
+- They provide a chat-based communication interface for users to declare requests; 
+- They manage the modules required to do the requested tasks;
+- They "understand" the Dosaku task-module system and are able to write *new* modules for the user, which they can 
+subsequently learn and use as any other module.
 
 In other words, the goal of a Dosaku agent is to be an end-to-end personal assistant, able to speak to the user in plain 
-English, break down any user query into executable steps, and carry out those steps to complete the user's request. In 
-the background the agent manages potentially a dozen or more AI models, where no more than one or two may fit on a GPU 
-at a time. The agent should also be capable of creating new modules *de novo*, meaning, eventually, it will be able to 
-carry out user queries even if no module is currently available to carry out the task.
+English, break down any user query or request into executable steps, and carry out those steps to complete the user's 
+request. In the background the agent manages potentially a dozen or more AI models, where no more than one or two may 
+fit on a GPU at a time. The agent should also be capable of creating new modules *de novo*. That is, eventually, the 
+agent will be able to carry out user queries even if no module is currently available to carry out the task.
 
 ## Named Agents
 
