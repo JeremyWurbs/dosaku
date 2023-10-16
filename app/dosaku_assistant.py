@@ -15,7 +15,16 @@ def main():
         for partial_response in dosaku.Chat(message):
             yield partial_response
 
-    gr.ChatInterface(predict).queue().launch()
+    gr.ChatInterface(
+        predict,
+        chatbot=gr.Chatbot(height=600),
+        title='Dosaku',
+        theme='HaleyCH/HaleyCH_Theme',
+        retry_btn=None,
+        undo_btn=None,
+        clear_btn=None,
+        submit_btn=None,
+    ).queue().launch()
 
 
 if __name__ == "__main__":
