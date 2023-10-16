@@ -15,7 +15,7 @@ import torch.nn as nn
 from torchvision.transforms.functional import normalize
 
 from dosaku import Config, Module
-from dosaku.tasks.restore_faces import RestoredImage
+from dosaku.tasks import RestoreFaces
 from dosaku.utils import ifnone, pil_to_cv2, cv2_to_pil
 
 
@@ -162,7 +162,7 @@ class GFPGAN(Module):
             bool = False,
             paste_back: bool = True,
             weight: float = 0.5
-            ) -> RestoredImage:
+            ) -> RestoreFaces.RestoredImage:
         """Run the pipeline.
 
         Args:
@@ -210,7 +210,7 @@ class GFPGAN(Module):
         cropped_faces = [cv2_to_pil(face) for face in self.face_helper.cropped_faces]
         restored_faces = [cv2_to_pil(restored_face) for restored_face in self.face_helper.restored_faces]
 
-        return RestoredImage(restored_image, cropped_faces, restored_faces)
+        return RestoreFaces.RestoredImage(restored_image, cropped_faces, restored_faces)
 
     def __call__(self, *args, **kwargs):
         return self.restore(*args, **kwargs)

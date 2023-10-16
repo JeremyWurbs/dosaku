@@ -47,7 +47,7 @@ response = agent.Chat.message("Hello, what's your name?")  # "Hi, I'm EchoBot."
 ## Tasks and Actions
 
 Note the way in which we used our agent. Our agent learned the *task* "Chat". This task defines an *action*, "message". 
-(As a quick aside: tasks are python classes, and thus get python class naming conventions, i.e. `TheyWillLookLikeThis`.  
+(As a quick aside: tasks are python classes, and thus get python class naming conventions, i.e. `TheyWillLookLikeThis`. 
 Actions are python methods, and thus get python method naming conventions, i.e. `they_will_look_like_this`). In general, 
 we get our agent to *do* an action with:
 
@@ -83,28 +83,46 @@ Chat.message.__doc__  # "Send a message to the agent and get a response. Args: .
 The base Agent will not know any tasks by default. To see what your agent can learn, you may ask it:
 
 ```python
-agent.learnable_tasks  # ['Chat', 'GradioChat', ...]
+agent.learnable_tasks  # ['Chat', 'RestoreFaces', ...]
 ```
 
-Which will print out a notably longer list. [Gradio](https://www.gradio.app/) is a library for quickly building machine
-learning applications. It provides a ChatInterface which we wrap in Dosaku as its own "GradioChat" task. We can examine 
-this task with:
+Which will print out a notably longer list. Tasks may do nearly anything. The RestoreFaces task, for example, will 
+restore disfigured or low-quality faces in an image. We can see how to use this task with:
 
 ```python
-agent.api('GradioChat')  # ['chat', 'predict', ...]
+agent.api('RestoreFaces')  # ['restore']
+print(agent.doc('RestoreFaces', action='restore'))
 ```
 
-The GradioChat task has the same *message* action from before, but now there is an additional *predict* action. You can 
-see how to use this action with:
+Which will print the following text, including a complete example on how to learn and use the `restore` action.
 
-```python
-agent.doc('GradioChat', 'predict')
+```text
+Restore faces in given image.
+    Args:
+        image: The input image. It may contain one or more disfigured or low-quality faces.
+
+    Returns:
+        A RestoreFaces.RestoredImage object containing, at minimum, the restored_image. Individual modules may also
+        provide the individual cropped faces, both before and after correcting, if able, but are not obligated to
+        do so.
+
+    Example::
+        from PIL import Image
+        from dosaku import Agent
+        from dosaku.utils import draw_images
+
+        agent = Agent()
+        agent.learn('RestoreFaces')
+
+        image = Image.open('tests/resources/hopper_photograph.png')
+        restoration = agent.RestoreFaces.restore(image)
+
+        draw_images((image, restoration.restored_image), labels=('Original', 'Restored Image'))
 ```
 
-The *predict* action is similar to *chat*, but accepts an additional chat *history* argument. There are a few other 
-actions defined by the GradioChat task as well. In any case, the GradioChat task defines the task used in the standard
-Dosaku chat agent application, and as such it defines the interface that all named Dosaku agents must support (more on 
-named Agents later).
+Running the above example, we get the following results:
+
+![Hopper Restoration](resources/hopper_restoration.png)
 
 ## Tasks and Modules
 
