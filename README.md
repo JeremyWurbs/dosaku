@@ -147,8 +147,8 @@ The answer is a Module.
 
 Modules live in the machine space. They are programs that do *something*. Modules can be anything, really. To be used by
 Dosaku, however, they must register (i.e. claim that they can do) at least one Task. When we ask Dosaku to 
-*learn* something, what we are doing is asking Dosaku to *load* (download, install, load into memory, etc.) a Module 
-program able to do the *Task*. Later, when Dosaku does the *Task*, what it is actually doing is running the *Module* 
+*learn* something, what we are doing is asking Dosaku to *load* (download, install, load into memory, etc.) a *module* 
+program able to do the *task*. Later, when Dosaku does the *Task*, what it is actually doing is running the *module* 
 program. 
 
 Following the above RestoreFaces example, you can see what tasks your agent knows and which Modules have been loaded 
@@ -160,7 +160,7 @@ agent.loaded_modules  # ['GFPGAN']
 ```
 
 RestoreFaces is an abstract base class defined in [dosaku.tasks.restore_faces.py](dosaku/tasks/restore_faces.py). It 
-defines the abstract method *restore* and includes the documentation return with `agent.doc()`. The actual 
+defines the abstract method *restore* and includes the documentation returned with `agent.doc()`. The actual 
 implementation for the task, however, is defined in a module called GFPGAN, located in 
 [dosaku.modules.tencent.gfpgan.py](dosaku/modules/tencent/gfpgan.py). GFPGAN is an open-source 
 [published model](https://arxiv.org/abs/2101.04061) created by Tencent, available from 
@@ -201,10 +201,10 @@ The two examples are almost identical, except one uses the module as a standalon
 agent learn and manage the module for the user. We will see some of the advantages of using a Dosaku agent soon, but 
 note the general structure of Dosaku: 
 
-    - **Tasks** translate a high-level *task* into a human-interpretible machine API;
-    - **Modules** implement one or more tasks;
-    - **Agents** communicate with a user, ultimately learning and doing *tasks* for the user; in the background the 
-        agent is managing modules (and services, described later), to actually do the tasks.
+- **Tasks** translate a high-level *task* into a human-interpretible machine API;
+- **Modules** implement one or more tasks;
+- **Agents** communicate with a user, ultimately learning and doing *tasks* for the user; in the background the 
+    agent is managing modules (and services, described later), to actually do the tasks.
 
 ## Agents
 
