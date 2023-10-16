@@ -4,10 +4,18 @@ An open-source, personal AI assistant.
 
 # Installation
 
-Create a virtual environment, and then install all the dependencies.
+Create a virtual environment, and then do one of the following.
+
+If you plan on developing the package further, install all the dependencies with:
 
 ```commandline
 pip install -r requirements.txt
+```
+
+If you plan on simply using the package for your own projects, install Dosaku as a standalone package:
+
+```commandline
+python setup.py install
 ```
 
 # Usage
