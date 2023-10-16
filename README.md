@@ -98,37 +98,6 @@ actions defined by the GradioChat task as well. In any case, the GradioChat task
 Dosaku chat agent application, and as such it defines the interface that all named Dosaku agents must support (more on 
 named Agents later).
 
-## [Old]
-
-```python
-dosk.learnable_tasks  # ['SongSerializer', ...]
-```
-
-Which will print a notably longer list of tasks that your agent can learn. To learn one of the tasks:
-
-```python
-dosk.learn('SongSerializer')
-dosk.tasks  # [..., 'SongSerializer']
-```
-
-Which will now print `SongSerializer`. The `SongSerializer` task is defined in 
-[dosaku.tasks.song_serializer.py](dosaku/tasks/song_serializer.py). This class defines one or more abstract methods 
-which must be implemented by any class claiming to be a "SongSerializer" (in this case, it defines a single abstract 
-method, *serialize*). As we were able to learn this task, we must have something able to do *serialize*. You may test 
-this hypothesis with the following:
-
-```python
-from dosaku import Dosaku
-from dosaku.tasks.song_serializer import Song
-
-song = Song(song_id='1', title='Billie Jean', artist='Michael Jackson')
-dosk = Dosaku()
-
-dosk.SongSerializer.serialize(song)  # AttributeError: 'Agent' object has no attribute 'SongSerializer'
-dosk.learn('SongSerializer')
-dosk.SongSerializer.serialize(song)  # '{"id": "1", "title": "Billie Jean", "artist": "Michael Jackson"}'
-```
-
 ## Tasks and Modules
 
 Dosaku is meant to bridge the world of humans and AI. As such, there are two fundamental *spaces* which define the key 
@@ -444,3 +413,12 @@ if __name__ == "__main__":
 
 Which runs and works. In this case Dosaku has forgotten to implement a method to check who won, which usually is 
 included in the implementation. In any case, results are still a work in progress. 
+
+
+## Dosaku GUI
+
+A Dosaku GUI is provided as its own [app](app/dosaku_assistant.py), available from the command line with the following:
+
+```commandline
+dosaku_gui
+```
