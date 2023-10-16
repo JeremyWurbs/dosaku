@@ -24,6 +24,7 @@ class Dosaku(Agent):
             ''
             'Finally, always stay in character as the best, most capable AI assistant— Dosaku.'
         )
+
         self.learn(
             'Chat',
             module='OpenAIChat',
