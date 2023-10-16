@@ -250,7 +250,7 @@ Before continuing, however, it is important to ask and understand the answer to 
 Services are modules that are run through the interwebs. OpenAI's ChatGPT is a service, as is Stability AI's Clipdrop
 (image generation) API. 
 
-To use services, you must provide the appropriate API keys in your [config.ini](dosaku/config/_config.ini) file. To use 
+To use services, you must provide the appropriate API keys in your [config.ini](dosaku/config/config.ini) file. To use 
 the Dosaku agent, for example, you must first go to [https://openai.com/](https://openai.com/), create an account and 
 copy/paste your OpenAI API key into your config.ini file next to API_KEYS/OPENAI. You can access this API key 
 programmatically with the following:
@@ -300,10 +300,10 @@ money using them costs. There are no limits within Dosaku itself— so before yo
 hundred-thousand word novel, it would be a good idea to [look at OpenAI's pricing](https://openai.com/pricing). 
 Currently, gpt-3.5-turbo costs $0.002 per 1k tokens and gpt-4 costs $0.06 per 1k tokens. That is, the standard gpt-4 
 model with an 8k context may cost up to 48 cents per call. Using Dosaku to write standalone modules will make, at 
-minimum, 5 calls to GPT, meaning a single *ponder* module (more on that later) may cost up to $2.50, *at minimum*. 
+minimum, 5 calls to GPT, meaning a single *ponder* call (more on that later) may cost up to $2.50, *at minimum*. 
 
-In practice, it is generally not nearly that expensive, but still, you are responsible for how much money Dosaku spends 
-on your behalf.
+In practice, it is generally not nearly that expensive. Still, you are wholly responsible for how much money Dosaku 
+spends on your behalf.
 
 Note that if you haven't signed up to a third party service, given them your credit card number, and copied the
 associated API key into your Dosaku config file, nothing in Dosaku will cost money and, hopefully, the worst that can 
