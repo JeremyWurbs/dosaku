@@ -45,27 +45,45 @@ class GFPGAN(Module):
         background_upsampler: The upsampler for the background (non-face portion of the image).
 
     Returns:
-        A tuple of (cropped_faces, restored_faces, restored_image).
+        A RestoreFaces.RestoredImage object with all fields (cropped_faces, restored_faces, restored_image) filled in.
 
         - **cropped_faces**: A list of 512x512 images, each image containing one cropped face from the input image.
         - **restored_faces**: A list of 512x512 images, each image containing the associated restored face.
-        - **restored_image**: An image or None. If a background_upsampler is given, a restored_image will be given back.
+        - **restored_image**: An image or None. If background_upsampler is available, restored_image will be given back.
 
     Example::
 
         from PIL import Image
-        from dosaku import GFPGAN1p4
-        from dosaku.utils import tensor_to_pil, draw_images
+        from dosaku.modules import GFPGAN
+        from dosaku.utils import draw_images
 
-        image = Image.open('tests/resources/disfigured_face.png')
+        gfpgan = GFPGAN(arch='RestoreFormer')
 
-        gfpgan = GFPGAN1p4()
-        cropped_faces, restored_faces, restored_image = gfpgan(image)
+        image = Image.open('tests/resources/hopper_photograph.png')
+        restoration = gfpgan.restore(image)
 
-        draw_images(images=(image, cropped_faces[0], restored_faces[0], restored_image),
-                    labels=('Original Image', 'GFPGAN Input', 'GFPGAN Output', 'Restored Image'))
+        draw_images(
+            images=(image, restoration.cropped_faces[0], restoration.restored_faces[0], restoration.restored_image),
+            labels=('Original Image', 'GFPGAN Input', 'GFPGAN Output', 'Restored Image'))
 
-    .. image:: sample_resources/modules_gfpgan1p4.png
+    Example::
+
+        from PIL import Image
+        from dosaku import Agent
+        from dosaku.utils import draw_images
+
+        agent = Agent()
+        agent.learn('RestoreFaces', module='GFPGAN', arch='RestoreFormer')
+
+        image = Image.open('tests/resources/hopper_photograph.png')
+        restoration = agent.RestoreFaces.restore(image)
+
+        draw_images(
+            images=(image, restoration.cropped_faces[0], restoration.restored_faces[0], restoration.restored_image),
+            labels=('Original Image', 'GFPGAN Input', 'GFPGAN Output', 'Restored Image'))
+
+    .. image:: sample_resources/modules_gfpgan.png
+
     """
     name = 'GFPGAN'
     config = Config()
