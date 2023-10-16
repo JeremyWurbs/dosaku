@@ -313,8 +313,9 @@ spends using those services.
 
 Dosaku is made to be as autonomous as possible, and may be configured to make as many calls as required to fulfill a 
 given user query. By continuing, you are implicitly acknowledging that you are willing to allow Dosaku to spend money 
-through any services you have enabled (by providing an associated API key into your config file). If you don't like what 
-Dosaku is doing, it is open source, and you are free to change it to better suit your needs.
+through any services you have enabled (by providing an associated API key into your config file). Ultimately, you 
+acknowledge that you are responsible for what Dosaku does and, if you don't like what it is doing, it is open source 
+and, as such, you are free to change it to better suit your needs.
 
 With that, to enable services and continue, place your API key into your config file, and then create a simple chat app:
 
