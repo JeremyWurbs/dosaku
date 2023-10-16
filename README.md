@@ -98,6 +98,7 @@ Which will print the following text, including a complete example on how to lear
 
 ```text
 Restore faces in given image.
+
     Args:
         image: The input image. It may contain one or more disfigured or low-quality faces.
 
@@ -133,13 +134,13 @@ Tasks live in the human space. They are the things we want our AI assistant to b
 the text from a pdf document*", "*text-to-image*" (i.e. create an image given a text prompt). Each of these *tasks* 
 takes a human concept and defines an explicit API. Some tasks, like "Chat", define only a single associated action,
 while other tasks, like "PlayGo", define a rather involved API compatible with the 
-[go text protocol](https://en.wikipedia.org/wiki/Go_Text_Protocol), including dozens of individual actions and 
-maintaining state between actions.
+[go text protocol](https://en.wikipedia.org/wiki/Go_Text_Protocol), including multiple individual actions and 
+maintaining state between them.
 
 In either case, the task translates a human concept into an explicit machine API interface. Tasks do *not* implement the 
-actual code necessary to *do* the task and its actions. In the above example, however, when we learned Chat we 
-actually *did* the action "chat". As programmers may have guessed, tasks are abstract interface classes and, at least in 
-python, cannot even be instantiated. What, then, is actually *doing* the task? What is it that our agent is learning 
+actual code necessary to *do* the task and its actions. In the above example, however, when we learned RestoreFaces we 
+actually *did* the action "restore". As programmers may have guessed, tasks are abstract interface classes and, at least 
+in python, cannot even be instantiated. What, then, is actually *doing* the task? What is it that our agent is learning 
 when it "learns"?
 
 The answer is a Module.
@@ -150,52 +151,115 @@ Dosaku, however, they must register (i.e. claim that they can do) at least one T
 program able to do the *Task*. Later, when Dosaku does the *Task*, what it is actually doing is running the *Module* 
 program. 
 
-Following the above Chat example, you can see what Module was loaded with:
+Following the above RestoreFaces example, you can see what tasks your agent knows and which Modules have been loaded 
+with:
 
 ```python
-agent.loaded_modules  # ['EchoBot']
+agent.tasks  # ['RestoreFaces']
+agent.loaded_modules  # ['GFPGAN']
 ```
 
-EchoBot is a class defined in [echo_bot.py](dosaku/modules/samples/chat/echo_bot.py) that has registered itself as 
-handling the *Chat* task. That is, the EchoBot class implements the actual code necessary to do all the actions (i.e.
-abstract methods). 
+RestoreFaces is an abstract base class defined in [dosaku.tasks.restore_faces.py](dosaku/tasks/restore_faces.py). It 
+defines the abstract method *restore* and includes the documentation return with `agent.doc()`. The actual 
+implementation for the task, however, is defined in a module called GFPGAN, located in 
+[dosaku.modules.tencent.gfpgan.py](dosaku/modules/tencent/gfpgan.py). GFPGAN is an open-source 
+[published model](https://arxiv.org/abs/2101.04061) created by Tencent, available from 
+[github](https://github.com/TencentARC/GFPGAN). 
 
-But EchoBot is not a particularly impressive module. Fortunately, it is not the only module available for Chat. You may
-list all the modules that have registered themselves as implementing a given task with:
+You can find out more information about this module by checking its docs:
 
 ```python
-agent.registered_modules('Chat')  # ['EchoBot', 'RedPajama', ...]
+from dosaku.modules import GFPGAN
+
+print(GFPGAN.__doc__)
 ```
 
-**A warning before continuing**: from here on out the modules we will be loading will download large AI models (~5-10GB 
-each) and attempt to run them on (a cuda-enabled GPU) on your machine. The process will be automatic, and all the 
-models here will be well-known models (RedPajama, Stable Diffusion) from well-known providers 
-([Together AI](https://together.ai/), Stability AI) from a well-known model hub (Huggingface). These models are 
-well-tested and trustworthy, but if you have not used Huggingface before, or don't have a lot of disk space, or don't 
-have a cuda-enabled GPU able to run these models, it may be best to finish reading the following documentation before
-attempting to do it yourself.
+Which will print information regarding using the module, including the following two samples:
 
-To learn (load, run) a different Module, we can pass it in explicitly when we learn the task:
+```text
+from PIL import Image
+from dosaku.modules import GFPGAN
+
+gfpgan = GFPGAN(arch='RestoreFormer')
+
+image = Image.open('tests/resources/hopper_photograph.png')
+restoration = gfpgan.restore(image)
+```
+
+```text 
+from PIL import Image
+from dosaku import Agent
+
+agent = Agent()
+agent.learn('RestoreFaces', module='GFPGAN', arch='RestoreFormer')
+
+image = Image.open('tests/resources/hopper_photograph.png')
+restoration = agent.RestoreFaces.restore(image)
+```
+
+The two examples are almost identical, except one uses the module as a standalone python module, and one has a Dosaku 
+agent learn and manage the module for the user. We will see some of the advantages of using a Dosaku agent soon, but 
+note the general structure of Dosaku: 
+
+    - **Tasks** translate a high-level *task* into a human-interpretible machine API;
+    - **Modules** implement one or more tasks;
+    - **Agents** communicate with a user, ultimately learning and doing *tasks* for the user; in the background the 
+        agent is managing modules (and services, described later), to actually do the tasks.
+
+## Agents
+
+As seen in the face restoration example above, modules are, in general, standalone python modules that can be used 
+independently of Dosaku, which may lead you to ask what, then, are Dosaku *agents* doing?
+
+Agents provide three key functionalities:
+
+    1. They provide a chat-based interface for users to communicate with the agent; 
+    2. They manage the modules required to do the requested tasks;
+    3. They "understand" the Dosaku task-module system, able to write *new* modules for the user, which they can 
+    subsequently learn and use as any other module.
+
+In other words, the goal of a Dosaku agent is to be an end-to-end personal assistant, able to speak to the user in plain 
+English, break down any user query into executable steps, and carry out those steps to complete the user's request. In 
+the background the agent manages potentially a dozen or more AI models, where no more than one or two may fit on a GPU 
+at a time. The agent should also be capable of creating new modules *de novo*, meaning, eventually, it will be able to 
+carry out user queries even if no module is currently available to carry out the task.
+
+## Named Agents
+
+The generic Dosaku *Agent* class does not preload any modules, and is thus of limited use starting off. Named Dosaku 
+agents are simply agents that preload a set of modules on initialization, and thus have some immediate utility out of 
+the box. You can make your own, customized agent by sub-classing from the Dosaku Agent class, and then loading any 
+desired modules on init.
+
+The main named agent included within Dosaku is *Dosaku*, which can be loaded with:
 
 ```python
-dosk.learn('Chat', module='RedPajama')
+from dosaku.agents import Dosaku
+
+agent = Dosaku()  # ValueError: Dosaku requires services to be enabled. Pass in enable_services=True on init.
 ```
+
+Which will actually throw the error shown above. In this case, Dosaku is saying that services must be enabled because it 
+wants to use OpenAI's GPT for its base chat functionality. You will not be able to use the Dosaku agent without setting 
+up the OpenAI service.
+
+Before continuing, however, it is important to ask and understand the answer to *what, exactly, are services?*
 
 ## Services
 
 Services are modules that are run through the interwebs. OpenAI's ChatGPT is a service, as is Stability AI's Clipdrop
 (image generation) API. 
 
-To use services, you must provide the appropriate API keys in your [config.ini](dosaku/config/_config.ini) file. To 
-use Stable Diffusion through Clipdrop, for example, first go to [https://clipdrop.co/apis](https://clipdrop.co/apis),
-sign up and obtain an API key. Place this key in your config file under the CLIPDROP API key. You can access this API 
-key programmatically with the following:
+To use services, you must provide the appropriate API keys in your [config.ini](dosaku/config/_config.ini) file. To use 
+the Dosaku agent, for example, you must first go to [https://openai.com/](https://openai.com/), create an account and 
+copy/paste your OpenAI API key into your config.ini file next to API_KEYS/OPENAI. You can access this API key 
+programmatically with the following:
 
 ```python
 from dosaku import Config
 
 config = Config()
-config['API_KEYS']['CLIPDROP']  # Should show your API key
+config['API_KEYS']['OPENAI']  # Should show your API key
 ```
 
 Once your API key is set up, you may use a service in the same way you'd use a module:
@@ -204,7 +268,7 @@ Once your API key is set up, you may use a service in the same way you'd use a m
 from dosaku import Agent
 
 agent = Agent()
-agent.learn('TextToImage', module='ClipdropTextToImage')  # RuntimeError
+agent.learn('Chat', module='OpenAIChat')  # RuntimeError
 ```
 
 Which will *not* work by default, instead throwing an important error: 
@@ -232,16 +296,51 @@ Comparing Modules and Services:
 
 In general, only use modules you trust, as they are likely downloading data (AI models with associated weights) to your
 machine, where they will subsequently be run. And, definitely, only use services you trust *and* understand how much 
-money using them costs. There are no limits within Dosaku itself— so before you request a million images from the 
-Clipdrop service, it would be a good idea to [look at their pricing](https://clipdrop.co/apis/pricing). Currently, processing a
-single text-to-image request is approximately 10 cents (USD 0.10) after any initial free credits. 
+money using them costs. There are no limits within Dosaku itself— so before you ask the OpenAIChat module to generate a 
+hundred-thousand word novel, it would be a good idea to [look at OpenAI's pricing](https://openai.com/pricing). 
+Currently, gpt-3.5-turbo costs $0.002 per 1k tokens and gpt-4 costs $0.06 per 1k tokens. That is, the standard gpt-4 
+model with an 8k context may cost up to 48 cents per call. Using Dosaku to write standalone modules will make, at 
+minimum, 5 calls to GPT, meaning a single *ponder* module (more on that later) may cost up to $2.50, *at minimum*. 
 
-In other words, if you haven't signed up to a third party service, given them your credit card number, and copied the
-associated API key into your Dosaku config file, nothing will cost money and, hopefully, the worst that can happen is 
-you download a model too big for your machine and you crash it. If you have done those things, because you 
-want to use e.g. ChatGPT, then you are completely responsible for how much money Dosaku spends using those services. 
+In practice, it is generally not nearly that expensive, but still, you are responsible for how much money Dosaku spends 
+on your behalf.
 
-With that, in order to continue, you may enable services, and then learn and use text-to-image with:
+Note that if you haven't signed up to a third party service, given them your credit card number, and copied the
+associated API key into your Dosaku config file, nothing in Dosaku will cost money and, hopefully, the worst that can 
+happen is you download a model too big for your machine and you crash it. If you have done those things, however, 
+because you e.g. want to use ChatGPT to power Dosaku, then you are completely responsible for how much money Dosaku 
+spends using those services. Dosaku is made to be as autonomous as possible, and may be configured to make as many calls 
+as required to fulfill a given user query.
+
+By continuing, you are implicitly acknowledging that you are willing to allow Dosaku to spend money through any services 
+you have enabled (by providing an associated API key into your config file). 
+
+With that, to enable services and continue, place your API key into your config file, and then create a simple chat app:
+
+```python
+import gradio as gr
+from dosaku import Agent
+
+agent = Agent(enable_services=True)
+agent.learn('Chat', module='OpenAIChat', model='gpt-3.5-turbo', stream=True)
+
+def predict(message, _):
+    for partial_response in agent.Chat(message):  # __call__() defaults to message()
+        yield partial_response
+
+gr.ChatInterface(predict).queue().launch()
+```
+
+Launch a browser to the displayed URL (http://localhost:7860 by default) and try the following prompt:
+
+```text
+Write a tic tac toe program between a human and an AI player. Make the AI player play perfectly.
+```
+
+Which should output a functioning tic-tac-toe game in python.
+
+
+## Text to Image
 
 ```python
 agent.enable_services()
@@ -448,3 +547,5 @@ A Dosaku GUI is provided as its own [app](app/dosaku_assistant.py), available fr
 ```commandline
 dosaku_gui
 ```
+
+![Dosaku Chat](resources/chat_sample.png)
