@@ -209,7 +209,7 @@ note the general structure of Dosaku:
 ## Agents
 
 As seen in the face restoration example above, modules are, in general, standalone python modules that can be used 
-independently of Dosaku, which may lead you to ask what, then, are Dosaku *agents* doing?
+independently of Dosaku, which may lead you to ask: what are Dosaku *agents* doing?
 
 Agents provide the following key functionalities:
 
