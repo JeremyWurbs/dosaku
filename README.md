@@ -347,7 +347,7 @@ Which should output a functioning tic-tac-toe game in python.
 ## Working with Dosaku
 
 Adding knowledge and abilities to Dosaku revolves around creating new modules it can learn. For more details on how to 
-write new tasks and modules, refer to the [developer readme](/dosaku/README.md). One powerful service Dosaku comes 
+write new tasks and modules, refer to the [modules readme](/dosaku/modules/README.md). One powerful service Dosaku comes 
 with, however, is called **Ponder**. Ponder (attempts to) automatically create new modules for you. Ponder uses OpenAI's 
 GPT-3.5/GPT-4, and so requires an OpenAI API key. Once you have put an API key into your config file, you may try the 
 following:
@@ -540,14 +540,6 @@ dosaku_gui
 
 ![Dosaku Chat](resources/chat_sample.png)
 
-## Unit Tests
-
-To run the unit tests, run the following from the repo root directory:
-
-```commandline
-pytest -s ./tests
-```
-
 ### Building the Docs
 
 If you wish to build the docs, first install the dev requirements (which include Sphinx and any required extensions):
@@ -568,3 +560,8 @@ A new directory [docs/_build](./docs/_build) should appear, containing the Dosak
 (*index.html*) in a browser, you should find something similar to the following:
 
 ![Documentation Example](./resources/dosaku_documentation.png)
+
+## Contributing
+
+You are encouraged to contribute! For information on contributing, refer to the 
+[Dosaku module readme](dosaku/README.md).
