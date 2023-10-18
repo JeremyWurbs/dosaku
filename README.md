@@ -552,3 +552,32 @@ dosaku_gui
 ```
 
 ![Dosaku Chat](resources/chat_sample.png)
+
+## Unit Tests
+
+To run the unit tests, run the following from the repo root directory:
+
+```commandline
+pytest -s ./tests
+```
+
+### Building the Docs
+
+If you wish to build the docs, first install the dev requirements (which include Sphinx and any required extensions):
+
+```commandline
+pip install -r dev_requirements.txt
+```
+
+And then build the docs from the root directory:
+
+```commandline
+sphinx-apidoc --force -o docs dosaku/
+cd docs
+make clean html
+```
+
+A new directory [docs/_build](./docs/_build) should appear, containing the Dosaku package documentation. Opening it 
+(*index.html*) in a browser, you should find something similar to the following:
+
+![Documentation Example](./resources/dosaku_documentation.png)
