@@ -7,17 +7,17 @@ contribute!
 
 If you would like to contribute, do the following:
 
-    1. **Tell someone.** Message an active contributer and briefly discuss the idea with them. The easiest way to find 
-    someone is to head to our discord and shout out to someone.
-    2. **Make an issue.** Make a github issue to help people track your progress.
-    3. **Fork Dosaku.** Fork Dosaku to your own repo. 
-    4. **Create feature.** Create a new feature branch. Create all the cool things related to your new feature.
-    5. **Create unit tests.** Make sure to add unit tests to make sure your feature works properly.
-    6. **Pylint your code.** Run pylint on your code. It should pass with 100%.
-    7. **Add documentation.** Document your code and build the docs. Make sure your documentation shows up correctly.
-    8. **Merge.** Git fetch the most up-to-date develop branch. Merge your code into develop.
-    9. **Make a pull request.** Make a pull request to pull your code into develop.
-    10. **Make changes.** If there are any changes to make, repeat the previous steps and make another pull request.
+1. **Tell someone.** Message an active contributer and briefly discuss the idea with them. The easiest way to find 
+someone is to head to our discord and shout out to someone.
+2. **Make an issue.** Make a github issue to help people track your progress.
+3. **Fork Dosaku.** Fork Dosaku to your own repo. 
+4. **Create feature.** Create a new feature branch. Create all the cool things related to your new feature.
+5. **Create unit tests.** Make sure to add unit tests to make sure your feature works properly.
+6. **Pylint your code.** Run pylint on your code. It should pass with 100%.
+7. **Add documentation.** Document your code and build the docs. Make sure your documentation shows up correctly.
+8. **Merge.** Git fetch the most up-to-date develop branch. Merge your code into develop.
+9. **Make a pull request.** Make a pull request to pull your code into develop.
+10. **Make changes.** If there are any changes to make, repeat the previous steps and make another pull request.
 
 Once your pull request is accepted, it will be merged into the develop branch and pulled into main with the next 
 scheduled release. Released versions get pushed to PyPI, after which `pip install dosaku` will show your new feature to 

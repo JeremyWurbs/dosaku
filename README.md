@@ -182,10 +182,10 @@ The answer is a Module.
 Modules live in the machine space. They are programs that do *something*. Modules can be anything, really. To be used by
 Dosaku, however, they must register (i.e. claim that they can do) at least one Task. When we ask Dosaku to 
 *learn* something, what we are doing is asking Dosaku to *load* (download, install, load into memory, etc.) a *module* 
-program able to do the *task*. Later, when Dosaku does the *Task*, what it is actually doing is running the *module* 
+program able to do the *task*. Later, when Dosaku does the *task*, what it is actually doing is running the *module* 
 program. 
 
-Following the above RestoreFaces example, you can see what tasks your agent knows and which Modules have been loaded 
+Following the above RestoreFaces example, you can see what tasks your agent knows and which modules have been loaded 
 with:
 
 ```python
@@ -596,4 +596,4 @@ A new directory [docs/_build](./docs/_build) should appear, containing the Dosak
 ## Contributing
 
 You are encouraged to contribute! For information on contributing, refer to the 
-[Dosaku module readme](dosaku/README.md).
+[Dosaku package readme](dosaku/README.md).
