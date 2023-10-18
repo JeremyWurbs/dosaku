@@ -23,15 +23,15 @@ class GFPGAN(Module):
     """Face restorer pipeline using GFPGAN v1.4.
 
     GFPGAN is a GAN model (i.e. **not** a diffusion model) used to restore faces. It can be very useful to use as a
-    post-processing step if you have passed or generated images containing faces from a diffusion model, as diffusion
-    models often have great difficulty generating non-hideous faces.
+    post-processing step if you have generated images containing faces from a diffusion model, as diffusion
+    models often generate disfigured or distorted faces. GFPGAN can also be useful for restoring faces from old images.
 
     Refer to the `source repo <https://github.com/TencentARC/GFPGAN>`_ for information on customizing this module.
     Here we include a basic module for the following end-to-end process:
 
         1. Detect and crop out all faces in the image, resizing each face to 512x512;
         2. Use GFPGAN to restore each cropped face;
-        3. Use a background upsampler to upsample the rest of the image;
+        3. (Optional) Use a background upsampler to upsample the rest of the image;
         4. Paste back the restored faces onto the upsampled background image.
 
     Args:
@@ -51,13 +51,13 @@ class GFPGAN(Module):
         - **restored_faces**: A list of 512x512 images, each image containing the associated restored face.
         - **restored_image**: An image or None. If background_upsampler is available, restored_image will be given back.
 
-    Example::
+    Standalone Module Example::
 
         from PIL import Image
         from dosaku.modules import GFPGAN
         from dosaku.utils import draw_images
 
-        gfpgan = GFPGAN(arch='RestoreFormer')
+        gfpgan = GFPGAN(upscale=4)
 
         image = Image.open('tests/resources/hopper_photograph.png')
         restoration = gfpgan.restore(image)
@@ -66,14 +66,14 @@ class GFPGAN(Module):
             images=(image, restoration.cropped_faces[0], restoration.restored_faces[0], restoration.restored_image),
             labels=('Original Image', 'GFPGAN Input', 'GFPGAN Output', 'Restored Image'))
 
-    Example::
+    Agent Example::
 
         from PIL import Image
         from dosaku import Agent
         from dosaku.utils import draw_images
 
         agent = Agent()
-        agent.learn('RestoreFaces', module='GFPGAN', arch='RestoreFormer')
+        agent.learn('RestoreFaces', module='GFPGAN', upscale=4)
 
         image = Image.open('tests/resources/hopper_photograph.png')
         restoration = agent.RestoreFaces.restore(image)
@@ -82,7 +82,9 @@ class GFPGAN(Module):
             images=(image, restoration.cropped_faces[0], restoration.restored_faces[0], restoration.restored_image),
             labels=('Original Image', 'GFPGAN Input', 'GFPGAN Output', 'Restored Image'))
 
-    .. image:: sample_resources/modules_gfpgan.png
+    .. image:: resources/modules_gfpgan.png
+
+    .. image:: resources/modules_gfpgan_close_up.png
 
     """
     name = 'GFPGAN'
