@@ -118,12 +118,14 @@ Restore faces in given image.
         image = Image.open('tests/resources/hopper_photograph.png')
         restoration = agent.RestoreFaces.restore(image)
 
-        draw_images((image, restoration.restored_image), labels=('Original', 'Restored Image'))
+        draw_images((image, restoration.restored_image), labels=('Original', 'Restoration'))
 ```
 
 Running the above example, we get the following results:
 
 ![Hopper Restoration](resources/hopper_restoration.png)
+
+![Hopper Restoration Close Up](docs/resources/modules_gfpgan_close_up.png)
 
 ## Tasks and Modules
 
