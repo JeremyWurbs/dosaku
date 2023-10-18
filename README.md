@@ -2,7 +2,38 @@
 
 An open-source, personal AI assistant.
 
-# Installation
+# Quickstart Preview
+
+If you want to jump right in, follow the following three steps:
+
+1. Download Dosaku:
+
+```commandline
+git clone git@github.com:dosakunet/dosaku
+```
+
+2. Make a virtual environment for Dosaku and then install it:
+
+```commandline
+cd dosaku
+mkvirtualenv dosaku -p /usr/bin/python3.10
+python setup.py install
+```
+
+3. Sign up for OpenAI's API by going to [https://openai.com/](https://openai.com/), obtain an API key, and then put the 
+API key in your Dosaku [config.ini](dosaku/config/config.ini) file.
+
+Now you're ready to launch Dosaku from the command line with:
+
+```commandline
+dosaku_gui
+```
+
+![Dosaku Chat](resources/chat_sample.png)
+
+# Deep Dive
+
+## Installation
 
 Create a virtual environment, and then do one of the following.
 
@@ -19,9 +50,9 @@ pip install -r requirements.txt
 pip install -r dev_requirements.txt
 ```
 
-# Usage
+## Usage
 
-## Quickstart
+### Quickstart
 
 The default personal AI assistant agent class is *Agent*.
 
@@ -45,7 +76,7 @@ agent.tasks  # ['Chat']
 response = agent.Chat.message("Hello, what's your name?")  # "Hi, I'm EchoBot."
 ```
 
-## Tasks and Actions
+### Tasks and Actions
 
 Note the way in which we used our agent. Our agent learned the *task* "Chat". This task defines an *action*, "message". 
 (As a quick aside: tasks are python classes, and thus get python class naming conventions, i.e. `TheyWillLookLikeThis`. 
@@ -79,7 +110,7 @@ Chat.__doc__  # 'Interface for a generic conversational chatbot.'
 Chat.message.__doc__  # "Send a message to the agent and get a response. Args: ... Example: ..."
 ```
 
-## Learning New Tasks
+### Learning New Tasks
 
 The base Agent will not know any tasks by default. To see what your agent can learn, you may ask it:
 
@@ -128,7 +159,7 @@ Running the above example, we get the following results:
 
 ![Hopper Restoration Close Up](docs/resources/modules_gfpgan_close_up.png)
 
-## Tasks and Modules
+### Tasks and Modules
 
 Dosaku is meant to bridge the world of humans and AI. As such, there are two fundamental *spaces* which define the key 
 concepts to the Dosaku platform: *tasks* and *modules*.
@@ -209,7 +240,7 @@ note the general structure of Dosaku:
 - **Agents** communicate with a user, ultimately learning and doing *tasks* for the user; in the background the 
     agent is managing modules (and services, described later), to actually do the tasks.
 
-## Agents
+### Agents
 
 As seen in the face restoration example above, modules are, in general, standalone python modules that can be used 
 independently of Dosaku, which may lead you to ask: what are Dosaku *agents* doing?
@@ -227,7 +258,7 @@ request. In the background the agent manages potentially a dozen or more AI mode
 fit on a GPU at a time. The agent should also be capable of creating new modules *de novo*. That is, eventually, the 
 agent will be able to carry out user queries even if no module is currently available to carry out the task.
 
-## Named Agents
+### Named Agents
 
 The generic Dosaku *Agent* class does not preload any modules, and is thus of limited use starting off. Named Dosaku 
 agents are simply agents that preload a set of modules on initialization, and thus have some immediate utility out of 
@@ -248,7 +279,7 @@ up the OpenAI service.
 
 Before continuing, however, it is important to ask and understand the answer to *what, exactly, are services?*
 
-## Services
+### Services
 
 Services are modules that are run through the interwebs. OpenAI's ChatGPT is a service, as is Stability AI's Clipdrop
 (image generation) API. 
@@ -345,7 +376,7 @@ Write a tic tac toe program between a human and an AI player. Make the AI player
 
 Which should output a functioning tic-tac-toe game in python.
 
-## Working with Dosaku
+### Working with Dosaku
 
 Adding knowledge and abilities to Dosaku revolves around creating new modules it can learn. For more details on how to 
 write new tasks and modules, refer to the [modules readme](/dosaku/modules/README.md). One powerful service Dosaku comes 
@@ -531,7 +562,7 @@ Which runs and works. In this case Dosaku has forgotten to implement a method to
 included in the implementation. In any case, results are still a work in progress. 
 
 
-## Dosaku GUI
+### Dosaku GUI
 
 A Dosaku GUI is provided as its own [app](app/dosaku_assistant.py), available from the command line with the following:
 
