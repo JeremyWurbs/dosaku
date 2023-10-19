@@ -86,3 +86,8 @@ image.show()
 ```
 
 ![Dosaku playing go](resources/dosaku.png)
+
+# Ponder
+
+Dosaku comes built-in with a module dedicated to building new modules— the **Ponder** module.
+
