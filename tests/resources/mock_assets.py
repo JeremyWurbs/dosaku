@@ -12,8 +12,8 @@ class MockAssets:
     image = Image.open(image_path).convert('RGB')  # 1024x768 portrait image
     image_mask = Image.open(mask_path).convert('L')  # 1024x768 mask to image
     image_large = Image.open('tests/resources/hopper_large.png').convert('RGB')  # 2048x1536 image
-    image_square = Image.open('tests/resources/square_image.png').convert('RGB')  # 1024x1024 image
-    image_background = Image.open('tests/resources/background.png').convert('RGB')  # background image
+    image_square = Image.open('tests/resources/hopper_square.png').convert('RGB')  # 1024x1024 image
+    image_background = Image.open('tests/resources/office_in_a_small_city.png').convert('RGB')  # background image
     prompt = 'An astronaut riding a horse'
 
     @property
