@@ -44,7 +44,7 @@ pip install -r dev_requirements.txt
 
 ## Usage
 
-### Learning
+### Tasks and Actions
 
 The default personal AI assistant agent class is *Agent*.
 
@@ -67,8 +67,6 @@ agent.learn('Chat')
 agent.tasks  # ['Chat']
 response = agent.Chat.message("Hello, what's your name?")  # "Hi, I'm EchoBot."
 ```
-
-### Tasks and Actions
 
 Note the way in which we used our agent. Our agent learned the *task* "Chat". This task defines an *action*, "message". 
 (As a quick aside: tasks are python classes, and thus get python class naming conventions, i.e. `TheyWillLookLikeThis`. 
@@ -102,7 +100,7 @@ Chat.__doc__  # 'Interface for a generic conversational chatbot.'
 Chat.message.__doc__  # "Send a message to the agent and get a response. Args: ... Example: ..."
 ```
 
-### Learning New Tasks
+### Learning
 
 The base Agent will not know any tasks by default. To see what your agent can learn, you may ask it:
 
@@ -258,7 +256,7 @@ tasks and modules *de novo*. That is, eventually, Dosaku will be able to carry o
 cannot be solved with the current set of known tasks, or if those tasks do not have pre-existing modules implementing 
 them.
 
-### Named Agents
+### Dosaku
 
 The generic Dosaku *Agent* class does not preload any modules, and is thus of limited use starting off. Named Dosaku 
 agents are simply agents that preload a set of modules on initialization, and thus have some immediate utility out of 
@@ -279,13 +277,13 @@ Note that if you do not enable services, you will get the following error:
 ValueError: Dosaku requires services to be enabled. Pass in enable_services=True on init.
 ```
 
-This error message is very important. Before continuing, it is important to understand what services are, as they 
-require extra setup and, generally, cost money.
+This error message is very important, as services cost money. Thus, before continuing, it is a good idea to 
+understand what services are and how to use them. 
 
 ### Services
 
-Services are modules that are run through the interwebs. OpenAI's ChatGPT is a service, as is Stability AI's Clipdrop
-(image generation). 
+Services are modules that are run through the interwebs instead of on your local machine. OpenAI's ChatGPT is a service, 
+as is Stability AI's Clipdrop. 
 
 To use services, you must provide the appropriate API keys in your [config.ini](dosaku/config/config.ini) file. To use 
 the Dosaku agent, for example, you must first go to [https://openai.com/](https://openai.com/), create an account and 
@@ -299,7 +297,8 @@ config = Config()
 config['API_KEYS']['OPENAI']  # Should show your API key
 ```
 
-Once your API key is set up, you may use a service in the same way you'd use a module:
+Once your API key is set up, you may use the associated service in the same way you'd use a module, except that you must
+explicitly enable the agent to use services on your behalf:
 
 ```python
 from dosaku import Agent
@@ -308,13 +307,13 @@ agent = Agent(enable_services=True)
 agent.learn('Chat', module='OpenAIChat')
 ```
 
-Note that if you do not enable services, you will again get the following error when you try to load OpenAIChat:
+Note that if you do not enable services, you will get an error:
 
 ```text 
 Loaded module was a service, but services have not been enabled. Enable services or load a non-service module.
 ```
 
-This error message is very important. When you use services, you are implicitly agreeing to:
+When you use services, you are implicitly agreeing to:
 
     1. Send your data over the interwebs;
     2. You are probably spending money;
@@ -334,7 +333,7 @@ Comparing Modules and Services:
 In general, only use modules you trust, as they are likely downloading data (AI models with associated weights) to your
 machine, where they will subsequently be run. And, definitely, only use services you both trust *and* understand how 
 much money using them costs. There are no limits within Dosaku itself— so before you ask the OpenAIChat module to 
-generate a hundred-thousand word novel, it would be a good idea to [look at OpenAI's pricing](https://openai.com/pricing). 
+generate a hundred-thousand word novel, it would be a good idea to look at [OpenAI's pricing](https://openai.com/pricing). 
 Currently, gpt-3.5-turbo costs $0.002 per 1k tokens and gpt-4 costs $0.06 per 1k tokens. That is, the standard gpt-4 
 model with an 8k context may cost up to 48 cents per call. Using Dosaku to write standalone modules will make, at 
 minimum, 5 calls to GPT, meaning a single *ponder* call (more on that later) may cost up to $2.50, *at minimum*. 
