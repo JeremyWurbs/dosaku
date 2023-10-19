@@ -334,27 +334,18 @@ In general, only use modules you trust, as they are likely downloading data (AI 
 machine, where they will subsequently be run. And, definitely, only use services you both trust *and* understand how 
 much money using them costs. There are no limits within Dosaku itself— so before you ask the OpenAIChat module to 
 generate a hundred-thousand word novel, it would be a good idea to look at [OpenAI's pricing](https://openai.com/pricing). 
-Currently, gpt-3.5-turbo costs $0.002 per 1k tokens and gpt-4 costs $0.06 per 1k tokens. That is, the standard gpt-4 
-model with an 8k context may cost up to 48 cents per call. Using Dosaku to write standalone modules will make, at 
-minimum, 5 calls to GPT, meaning a single *ponder* call (more on that later) may cost up to $2.50, *at minimum*. 
 
-In practice, it is generally not nearly that expensive. Still, you are wholly responsible for how much money Dosaku 
-spends on your behalf.
+By enabling services, you are indicating that you are responsible for how much money Dosaku spends on your behalf.
 
-Note that if you haven't signed up to a third party service, given them your credit card number, and copied the
+Note that if you haven't signed up to a third party service, given them your credit card number and copied the
 associated API key into your Dosaku config file, nothing in Dosaku will cost money and, hopefully, the worst that can 
 happen is you download a model too big for your machine and crash it. If you have done those things, however, 
 because you e.g. want to use GPT-4 to power Dosaku, then you are completely responsible for how much money Dosaku 
 spends using those services. 
 
-Dosaku is made to be as autonomous as possible, and may be configured to make as many calls as required to fulfill a 
-given user query. By continuing, you are implicitly acknowledging that you are willing to allow Dosaku to spend money 
-through any services you have enabled (by providing an associated API key into your config file). Ultimately, you 
-acknowledge that you are responsible for what Dosaku does and, if you don't like what it is doing, it is open source 
-and, as such, you are free to change it to better suit your needs.
+### Working with Dosaku
 
-With that, to continue place your OpenAI API key into your config file. You can test out Dosaku with the following 
-gradio chat app. 
+Once you have obtained an OpenAI API key, you can create your own Dosaku app with something like the following:
 
 ```python
 import gradio as gr
@@ -378,12 +369,12 @@ Write a tic tac toe program between a human and an AI player. Make the AI player
 
 Which should yield a functioning tic-tac-toe bot in python.
 
-### Working with Dosaku
+### Extending Dosaku
 
 Adding knowledge and abilities to Dosaku revolves around creating new modules it can learn. For more details on how to 
 write new tasks and modules, refer to the [modules readme](/dosaku/modules/README.md). One powerful service Dosaku comes 
 with out of the box, however, is called **Ponder**. Ponder (attempts to) automatically create new modules for you. Ponder 
-uses OpenAI's GPT-3.5/GPT-4 and makes repeated calls to determine a high level solution and create the associated code. 
+uses OpenAI's GPT and makes repeated calls to determine a high level solution and create the associated code. 
 
 You can try it out with:
 
@@ -433,7 +424,7 @@ cd docs
 make clean html
 ```
 
-A new directory [docs/_build](./docs/_build) should appear, containing the Dosaku package documentation. Opening it 
+A new directory dosacku/docs/_build should appear, containing the Dosaku package documentation. Opening it 
 (*index.html*) in a browser, you should find something similar to the following:
 
 ![Documentation Example](./resources/dosaku_documentation.png)
