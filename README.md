@@ -4,26 +4,24 @@ An open-source, personal AI assistant.
 
 # Quickstart Preview
 
-To jump right in:
-
 1. Download Dosaku:
 
 ```commandline
 git clone git@github.com:dosakunet/dosaku
 ```
 
-2. Make a virtual environment for Dosaku and then install it:
+2. Make a virtual environment as desired, and then install Dosaku:
 
 ```commandline
+[mkvirtualenv dosaku]
 cd dosaku
-mkvirtualenv dosaku -p /usr/bin/python3.10
 python setup.py install
 ```
 
-3. Sign up for OpenAI's API by going to [https://openai.com/](https://openai.com/), obtain an API key, and then put the 
-API key in your Dosaku [config.ini](dosaku/config/config.ini) file.
+3. Get an OpenAI API key from [https://openai.com/](https://openai.com/), and put it in your Dosaku 
+[config.ini](dosaku/config/config.ini) file under API_KEYS/OPENAI.
 
-Now you're ready to launch Dosaku from the command line with:
+Then launch Dosaku from the command line with:
 
 ```commandline
 dosaku_gui
@@ -46,7 +44,7 @@ pip install -r dev_requirements.txt
 
 ## Usage
 
-### Quickstart
+### Learning
 
 The default personal AI assistant agent class is *Agent*.
 
