@@ -2,6 +2,8 @@ from dosaku import Agent
 
 
 class Dosaku(Agent):
+    name = 'Dosaku'
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -17,10 +19,12 @@ class Dosaku(Agent):
             ''
             'For example, if the user asks to create a program that prints the numbers one to ten, say:'
             ''
+            '```python'
             'from i in range(10):'
             '   print(i)'
+            '```'
             ''
-            'Do not add any extra characters or language, such as ```python'
+            'Do not add any extra characters or language, other than the ```python begin and ``` end to denote code.'
             ''
             'Finally, always stay in character as the best, most capable AI assistant— Dosaku.'
         )
@@ -32,15 +36,10 @@ class Dosaku(Agent):
             model=self.config['OPENAI']['DEFAULT_MODEL'],
             system_prompt=system_prompt
         )
+        self.learn('SpeechToText', module='Whisper')
+        self.learn('RealtimeSpeechToText', module='Whisper')
+        self.learn('Spellchecker')
 
-        if self.services_enabled:
-            services_key = 'DOSAKU_SERVICES_LOAD_ON_INIT'
-            for task in self.config[services_key]:
-                if task not in self.tasks:
-                    self.learn(task, module=self.config[services_key][task])
-
-        modules_key = 'DOSAKU_MODULES_LOAD_ON_INIT'
-        for task in self.config[modules_key]:
+        for task in self.config['EXTRA_DOSAKU_MODULES_ON_INIT']:
             if task not in self.tasks:
-                self.learn(task, module=self.config[modules_key][task])
-
+                self.learn(task, module=self.config['EXTRA_DOSAKU_MODULES_ON_INIT'][task])
