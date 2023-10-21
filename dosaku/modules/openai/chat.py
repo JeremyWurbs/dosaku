@@ -15,11 +15,13 @@ class OpenAIChat(Service):
             self,
             system_prompt: str = 'You are a helpful assistant.',
             model: Optional[str] = None,
-            stream: bool = False):
+            stream: bool = False,
+            temperature: float = 1.):
         openai.api_key = self.config['API_KEYS']['OPENAI']
         self.system_prompt = system_prompt
         self.model = ifnone(model, default=self.config['OPENAI']['DEFAULT_MODEL'])
         self.stream = stream
+        self.temperature = temperature
         self.history = None
         self.clear_chat()
 
@@ -44,8 +46,8 @@ class OpenAIChat(Service):
         response = openai.ChatCompletion.create(
             model=self.model,
             messages=history,
-            temperature=1.0,
-            stream=False
+            temperature=self.temperature,
+            stream=False,
         )['choices'][0]['message']['content']
 
         if record_interaction:
@@ -59,7 +61,7 @@ class OpenAIChat(Service):
         response = openai.ChatCompletion.create(
             model=self.model,
             messages=history,
-            temperature=1.0,
+            temperature=self.temperature,
             stream=True
         )
 

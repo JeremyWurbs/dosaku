@@ -34,7 +34,8 @@ class Dosaku(Agent):
             module='OpenAIChat',
             stream=True,
             model=self.config['OPENAI']['DEFAULT_MODEL'],
-            system_prompt=system_prompt
+            system_prompt=system_prompt,
+            temperature=0.1,
         )
         self.learn('SpeechToText', module='Whisper')
         self.learn('RealtimeSpeechToText', module='Whisper')
