@@ -32,7 +32,13 @@ class ModuleManager:
             raise ValueError(f'A builder for the module {module} has not been registered. Unable to create one.')
         return module_info.builder(**kwargs)
 
-    def load_module(self, module: str, force_reload: bool = False, allow_services: bool = False, **kwargs):
+    def load_module(
+            self,
+            module: str,
+            force_reload: bool = False,
+            allow_services: bool = False,
+            allow_executors: bool = False,
+            **kwargs):
         if module not in self._modules or force_reload:
             try:
                 module_instance = self._create(module, **kwargs)
@@ -41,6 +47,9 @@ class ModuleManager:
             if module_instance.is_service and allow_services is False:
                 raise RuntimeError(f'Loaded module was a service, but services have not been enabled. Enable services '
                                    f'or load a non-service module.')
+            if module_instance.is_executor and allow_executors is False:
+                raise RuntimeError(f'Loaded module was an executor, but executors have not been enabled. Enable '
+                                   f'executors or load a non-executor module.')
             self._modules[module] = module_instance
 
             dependencies = self._modules_info[module].dependencies

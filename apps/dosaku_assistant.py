@@ -25,7 +25,6 @@ def main():
         def predict(history):
             for partial_response in dosk.Chat(history[-1][0]):
                 history[-1][1] = partial_response
-                print(f'{partial_response}')
                 yield history
 
         def start_audio_stream():
