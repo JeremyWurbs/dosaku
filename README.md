@@ -280,7 +280,7 @@ ValueError: Dosaku requires services to be enabled. Pass in enable_services=True
 This error message is very important, as services cost money. Thus, before continuing, it is a good idea to 
 understand what services are and how to use them. 
 
-### Services
+### Services and Executors
 
 Services are modules that are run through the interwebs instead of on your local machine. OpenAI's ChatGPT is a service, 
 as is Stability AI's Clipdrop. 
@@ -320,15 +320,24 @@ When you use services, you are implicitly agreeing to:
 
 Because of these facts, services and modules are kept distinct within Dosaku.
 
-Comparing Modules and Services:
+One more key Module type to understand before using Dosaku are Executors. Like Services, Executors are also Modules, but
+they are explicitly granted the privileges to run dynamically generated code. That is, they are allowed to run the 
+python `exec` command. 
 
-|                                                       | Modules | Services  |
-|------------------------------------------------------:|:-------:|:---------:|
-|                  May download data from the interwebs |    x    |     x     |
-| May run code from the interwebs on your local machine |    x    |     x     |
-|                        May send data to the interwebs |         |     x     |
-|                                        May cost money |         |     x     |
-|                                  Computation location |  Local  | Interwebs |
+Running the `exec` command can be a huge security risk. The reason why Dosaku uses executors are to run code generated 
+by AI. Before allowing an executor to run code on your behalf, however, you should make sure you trust the code source
+(likely GPT or an equivalent model) and understand how the code is being used on your behalf. 
+
+Comparing Modules, Services and Executors:
+
+|                                                       | Modules | Services  | Executors |
+|------------------------------------------------------:|:-------:|:---------:|:---------:|
+|                  May download data from the interwebs |    x    |     x     |     x     |
+| May run code from the interwebs on your local machine |    x    |     x     |     x     |
+|                        May send data to the interwebs |         |     x     |           |
+|                                        May cost money |         |     x     |           |
+|                    May run dynamically generated code |         |           |     x     |
+|                                  Computation location |  Local  | Interwebs |   Local   |
 
 In general, only use modules you trust, as they are likely downloading data (AI models with associated weights) to your
 machine, where they will subsequently be run. And, definitely, only use services you both trust *and* understand how 
@@ -341,7 +350,16 @@ Note that if you haven't signed up to a third party service, given them your cre
 associated API key into your Dosaku config file, nothing in Dosaku will cost money and, hopefully, the worst that can 
 happen is you download a model too big for your machine and crash it. If you have done those things, however, 
 because you e.g. want to use GPT-4 to power Dosaku, then you are completely responsible for how much money Dosaku 
-spends using those services. 
+spends using those services.
+
+### Executor Services
+
+The Dosaku agent uses OpenAI's GPT Service to run numerous sub-agents to do its tasks, including chatting with the user. 
+If desired, Dosaku can also run Executor modules. 
+
+```python
+
+```
 
 ### Working with Dosaku
 
