@@ -27,7 +27,7 @@ setuptools.setup(
      include_package_data=True,
      package_data={'': ['*.ini']},  # If any package contains *.ini files, include them
      scripts=[],
-     entry_points={'console_scripts': ['dosaku_gui=app.dosaku_assistant:main']},
+     entry_points={'console_scripts': ['dosaku_gui=apps.dosaku_assistant:main']},
      classifiers=[
          "Programming Language :: Python :: 3",
          "Operating System :: OS Independent",
