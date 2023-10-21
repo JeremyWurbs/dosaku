@@ -1,5 +1,7 @@
 from dosaku.modules.dosaku.ponder import Ponder
 from dosaku.modules.openai.chat import OpenAIChat
+from dosaku.modules.openai.spellchecker import Spellchecker
+from dosaku.modules.openai.whisper import Whisper
 from dosaku.modules.samples.song_serializer.json_serializer import JsonSerializer
 from dosaku.modules.samples.song_serializer.xml_serializer import XmlSerializer
 from dosaku.modules.samples.song_serializer.yaml_serializer import YamlSerializer
