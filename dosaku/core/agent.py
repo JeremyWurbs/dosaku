@@ -11,9 +11,10 @@ class Agent:
     task_hub = task_hub
     module_manager = module_manager
 
-    def __init__(self, enable_services=False):
+    def __init__(self, enable_services: bool = False, enable_executors: bool = False):
         self._known_tasks: Dict[str: List[str]] = dict()
         self._allow_services = enable_services
+        self._allow_executors = enable_executors
 
     @classmethod
     def register_task(cls, task: Task):
@@ -51,6 +52,16 @@ class Agent:
     def services_enabled(self):
         return self._allow_services
 
+    def enable_executors(self):
+        self._allow_executors = True
+
+    def disable_executors(self):
+        self._allow_executors = False
+
+    @property
+    def executors_enabled(self):
+        return self._allow_executors
+
     def learn(self, task: Union[str, Task], module: Optional[str] = None, force_relearn=False, **kwargs):
         if isinstance(task, Task):
             task = task.name
@@ -64,7 +75,11 @@ class Agent:
         print(f'Attemping to learn {task} via the module {module}.')
         try:
             self.module_manager.load_module(
-                module, force_reload=force_relearn, allow_services=self._allow_services, **kwargs)
+                module,
+                force_reload=force_relearn,
+                allow_services=self.services_enabled,
+                allow_executors=self.executors_enabled,
+                **kwargs)
         except RuntimeError as err:
             raise err
 
