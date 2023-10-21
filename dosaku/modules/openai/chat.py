@@ -1,5 +1,5 @@
 import copy
-from typing import Optional
+from typing import Dict, List, Generator, Optional, Union
 
 import openai
 
@@ -23,13 +23,13 @@ class OpenAIChat(Service):
         self.history = None
         self.clear_chat()
 
-    def message(self, message: str, **kwargs):
+    def message(self, message: str, **kwargs) -> Union[str, Generator[str, None, None]]:
         if self.stream:  # return generator object that will stream response
             return self._message_generator(message, **kwargs)
         else:  # return str response directly
             return self._message_return(message, **kwargs)
 
-    def _update_history(self, message: str, record_interaction: bool = True):
+    def _update_history(self, message: str, record_interaction: bool = True) -> List[Dict[str, str]]:
         if record_interaction:
             self.history.append({'role': 'user', 'content': message})
             history = self.history
@@ -38,7 +38,7 @@ class OpenAIChat(Service):
             history.append({'role': 'user', 'content': message})
         return history
 
-    def _message_return(self, message: str, record_interaction: bool = True):
+    def _message_return(self, message: str, record_interaction: bool = True) -> str:
         history = self._update_history(message, record_interaction=record_interaction)
 
         response = openai.ChatCompletion.create(
@@ -53,7 +53,7 @@ class OpenAIChat(Service):
 
         return response
 
-    def _message_generator(self, message: str, record_interaction: bool = True):
+    def _message_generator(self, message: str, record_interaction: bool = True) -> Generator[str, None, None]:
         history = self._update_history(message, record_interaction=record_interaction)
 
         response = openai.ChatCompletion.create(
@@ -63,7 +63,7 @@ class OpenAIChat(Service):
             stream=True
         )
 
-        partial_message = ""
+        partial_message = ''
         if record_interaction:
             self.history.append({'role': 'assistant', 'content': partial_message})
         for chunk in response:
