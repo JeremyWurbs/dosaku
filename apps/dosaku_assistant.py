@@ -10,11 +10,11 @@ def main():
         chatbot = gr.Chatbot(height=600, show_label=False)
 
         with gr.Row():
-            microphone = gr.Microphone(streaming=True)
-            msg = gr.Textbox(show_label=False)
-        with gr.Accordion('Microphone Options'):
-            auto_response = gr.Checkbox(label='Auto send message', value=True)
-            use_spellchecker = gr.Checkbox(label='Use spellchecker', value=True)
+            msg = gr.Textbox(show_label=False, placeholder='Type message')
+        with gr.Accordion('Microphone'):
+                microphone = gr.Microphone(streaming=True, show_label=False)
+                auto_response = gr.Checkbox(label='Auto send message', value=True)
+                use_spellchecker = gr.Checkbox(label='Use spellchecker', value=True)
         streaming_audio = gr.State(False)
 
         def reset_msg(message, history):
