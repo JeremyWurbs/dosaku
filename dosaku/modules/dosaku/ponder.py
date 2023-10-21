@@ -107,9 +107,9 @@ class Ponder(Service):
     sample_fullpath = lambda filename: os.path.join(Ponder.config['DOSAKU']['PONDERED_SAMPLE_DIR'], filename)
     app_fullpath = lambda filename: os.path.join(Ponder.config['DOSAKU']['PONDERED_APP_DIR'], filename)
 
-    def __init__(self, model='gpt-3.5-turbo'):
+    def __init__(self, model: Optional[str] = None):
         openai.api_key = self.config['API_KEYS']['OPENAI']
-        self.model = model
+        self.model = ifnone(model, self.config['OPENAI']['DEFAULT_MODEL'])
 
     def _get_filename(self, conversation: OpenAIChat) -> str:
         output_filename = conversation.message(
