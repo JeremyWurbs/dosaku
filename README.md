@@ -118,8 +118,8 @@ agent.doc('RestoreFaces', action='restore')
 
 Which will print the following text, including a complete example on how to learn and use the `restore` action.
 
-```text
-Restore faces in given image.
+```python
+"""Restore faces in given image.
 
     Args:
         image: The input image. It may contain one or more disfigured or low-quality faces.
@@ -129,7 +129,7 @@ Restore faces in given image.
         provide the individual cropped faces, both before and after correcting, if able, but are not obligated to
         do so.
 
-    Example::
+    Example::"""
         from PIL import Image
         from dosaku import Agent
         from dosaku.utils import draw_images
