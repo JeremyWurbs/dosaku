@@ -328,8 +328,9 @@ Note that if you do not enable services, you will get the following error:
 ServicePermissionRequired: Dosaku requires services be enabled. Pass in enable_services=True on init.
 ```
 
-This error message is very important, as services cost money. Thus, before continuing, it is a good idea to 
-understand what services are and how to use them. 
+This error message is very important, as services cost money. We have been referencing service modules above, and since 
+Dosaku makes heavy use of Services (and Executors), it is important to understand what these special modules are and do
+before continuing.
 
 ### Services
 
