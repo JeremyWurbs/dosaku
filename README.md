@@ -244,22 +244,23 @@ independently of Dosaku, which may lead you to ask: what are Dosaku *agents* doi
 Agents provide the following key functionalities:
 
 - They provide a chat-based communication interface for users to declare requests; 
-- They propose end-to-end solutions by breaking user requests into a series of *tasks*;
+- They propose end-to-end solutions by breaking user requests into a series of tasks;
 - They run the series of tasks, loading and managing the modules that implement the associated tasks;
-- They "understand" the Dosaku task-module system and are able to write *new* tasks and modules for the user, which 
-they can subsequently learn and use as any other module.
+- They "understand" the Dosaku task-module system and are able to write *new* tasks and modules for the user on demand, 
+which they can subsequently learn and use as with any other module.
 
 In other words, the goal of a Dosaku agent is to be an end-to-end personal assistant, able to speak to the user in plain 
 English, break down any user query or request into executable steps, and carry out those steps to complete the user's 
 request. The structure of Dosaku is a modular structure that allows agents to propose high level solutions in a 
-*task space* that the user can understand, and then implement a solution in a machine space with a one-to-one matching 
-of tasks to *modules*. 
+*task space* that the user can understand, and then implement that high-level solution by creating machine-level 
+modules to do each task. The idea here is to both increase the chance of the AI creating a viable solution as well as 
+enabling the user to understand what the AI has done. 
 
-In the background the agent is subsequently managing potentially a dozen or more AI models, where no more than one or 
-two may fit on a GPU at a time. The agent also comes with a set of modules specifically designed to help create new 
+In the background the agent is concurrently managing a dozen or more AI models, where no more than one or two may fit on 
+a GPU at a time. The base agent class also comes with a set of modules specifically designed to help create new 
 tasks and modules *de novo*. That is, eventually, Dosaku will be able to carry out user queries even if the query 
-cannot be solved with the current set of known tasks, or if those tasks do not have pre-existing modules implementing 
-them.
+cannot be solved with the current set of known tasks, or if those tasks do not have pre-existing modules available to 
+run them.
 
 ### Dosaku
 
