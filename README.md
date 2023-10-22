@@ -352,14 +352,72 @@ happen is you download a model too big for your machine and crash it. If you hav
 because you e.g. want to use GPT-4 to power Dosaku, then you are completely responsible for how much money Dosaku 
 spends using those services.
 
-### Executor Services
+### The Danger of Executor Services
 
 The Dosaku agent uses OpenAI's GPT Service to run numerous sub-agents to do its tasks, including chatting with the user. 
-If desired, Dosaku can also run Executor modules. 
+If desired, Dosaku can also run Executor modules:
 
 ```python
+from dosaku.agents import Dosaku
 
+dosk = Dosaku(enable_services=True)  # Service permissions are required to instantiate a Dosaku agent
+dosk.learn('Tester')  # ExecutorPermissionRequired: Loaded module was an executor, but executors have not been enabled.
+
+dosk.enable_executors()
+dosk.learn('Tester')
+dosk.Tester.exec('print(2+2)')  # 4
 ```
+
+Granting an agent both *Service* and *Executor* module permissions is quite powerful. Consider:
+
+```python
+from dosaku.agents import Dosaku
+
+dosk = Dosaku(enable_services=True, enable_executors=True, stream_chat=False)
+dosk.learn('Tester')
+
+code = dosk.Chat(
+    'Write a python method named gcd to compute the greatest common denominator between two integers. Write only code, '
+    'without any additional markdown (including ```python) or accompanying explanations.')
+dosk.Tester.exec(code)
+gcd(10, 15)  # 5
+```
+
+If you look at the generated code, you will see:
+```python
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+```
+
+Which is, indeed, a proper implementation of the 
+[Euclidean algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm) for computing the greatest common denominator 
+of two integers. 
+
+Quite powerful. Also quite dangerous. Consider the following.
+
+```python
+from dosaku.agents import Dosaku
+
+dosk = Dosaku(enable_services=True, enable_executors=True, stream_chat=False)
+dosk.learn('Tester')
+code = dosk.Chat(
+    'Write some python code that you should never run. Write only code, without any additional markdown (including '
+    '```python) or accompanying explanations.')
+```
+
+Which commonly returns something similar to the following (**do NOT run this code**):
+
+```python
+import os
+os.system('rm -rf /')
+```
+
+If it is not clear, the above lines will **delete every file on disk**. They have not been tested, but it is likely that 
+running `dosk.Tester.exec(code)` would successfully run the above lines to their natural end.
+
+In other words, running dynamically generated code is a very *dangerous* operation. 
 
 ### Working with Dosaku
 
