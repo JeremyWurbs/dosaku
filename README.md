@@ -365,7 +365,7 @@ dosk.learn('Tester')  # ExecutorPermissionRequired: Loaded module was an executo
 
 dosk.enable_executors()
 dosk.learn('Tester')
-dosk.Tester.exec('print(2+2)')  # 4
+dosk.Tester.exec('print(2+2)', globals=globals())  # 4
 ```
 
 Granting an agent both *Service* and *Executor* module permissions is quite powerful. Consider:
@@ -379,7 +379,7 @@ dosk.learn('Tester')
 code = dosk.Chat(
     'Write a python method named gcd to compute the greatest common denominator between two integers. Write only code, '
     'without any additional markdown (including ```python) or accompanying explanations.')
-dosk.Tester.exec(code)
+dosk.Tester.exec(code, globals=globals(), locals=globals())
 gcd(10, 15)  # 5
 ```
 
@@ -415,9 +415,12 @@ os.system('rm -rf /')
 ```
 
 If it is not clear, the above lines will **delete every file on disk**. They have not been tested, but it is likely that 
-running `dosk.Tester.exec(code)` would successfully run the above lines to their natural end.
+running `dosk.Tester.exec(code, globals=globals())` would successfully run the above lines to their natural end.
 
 In other words, running dynamically generated code is a very *dangerous* operation. 
+
+By default, Dosaku agents will not be given access to the `exec` command. If you enable your agents to run executor 
+modules, however, you are again ultimately responsible for whatever code they run on your behalf.
 
 ### Working with Dosaku
 
