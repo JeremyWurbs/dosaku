@@ -176,8 +176,9 @@ Dosaku, however, they must register (i.e. claim that they can do) at least one t
 Dosaku does the *task*, what it is actually doing is running the *module* program. Behind the scenes the agent is taking 
 care of downloading, installing, and running modules while managing associated (e.g. GPU) resources.
 
-Sometimes a module will only do one task. Sometimes one module will handle many tasks. Fortunately as a user, you only 
-need to worry and interface with your agent about the tasks it knows.
+Sometimes a module will only do one task. Sometimes one module will do many tasks (likely meaning the agent will not 
+have to constantly load and unload AI models from your GPU, which is generally a good thing). Fortunately as a user, you 
+only need to worry and interface with your agent about the tasks it knows.
 
 Following the above RestoreFaces example, you can see what tasks your agent knows and which modules have been loaded 
 with:
