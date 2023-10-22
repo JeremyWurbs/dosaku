@@ -244,7 +244,7 @@ independently of Dosaku, which may lead you to ask: what are Dosaku *agents* doi
 Agents provide the following key functionalities:
 
 - They provide a chat-based communication interface for users to declare requests; 
-- They propose end-to-end solutions by break user requests into a series of *tasks*;
+- They propose end-to-end solutions by breaking user requests into a series of *tasks*;
 - They run the series of tasks, loading and managing the modules that implement the associated tasks;
 - They "understand" the Dosaku task-module system and are able to write *new* tasks and modules for the user, which 
 they can subsequently learn and use as any other module.
