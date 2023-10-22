@@ -262,7 +262,7 @@ tasks and modules *de novo*. That is, eventually, Dosaku will be able to carry o
 cannot be solved with the current set of known tasks, or if those tasks do not have pre-existing modules available to 
 run them.
 
-### Dosaku
+### Named Agents
 
 The generic Dosaku *Agent* class does not preload any modules, and is thus of limited use starting off. Named Dosaku 
 agents are simply agents that preload a set of modules on initialization, and thus have some immediate utility out of 
@@ -286,8 +286,9 @@ class AgentSmith(Agent):
             'belong to the machines.')
         self.learn('Chat', module='OpenAIChat', stream=False, system_prompt=system_prompt)
     
-        # Load Stability AI's Clipdrop (requires services a Clipdrop API key put into your config.ini)
+        # Load Stability AI's Clipdrop (requires services enabled and a Clipdrop API key put into your config.ini)
         self.learn('TextToImage', module='ClipdropTextToImage')
+
 
 agent = AgentSmith(enable_services=True)
 response = agent.Chat(
@@ -307,8 +308,13 @@ image.show()
 
 ![Agent Smith's Vision](resources/agent_smiths_vision.png)
 
+### Dosaku
+
 Fortunately, the main named Dosaku agent is less antagonistic (for now and, hopefully, for long to come). The main 
-Dosaku agent is thusly titled, Dosaku, and can be loaded with:
+Dosaku agent is thusly titled, Dosaku. Dosaku specializes in being a helpful conversational chatbot, with added 
+functionality in breaking down requests into specific tasks and writing module code to implement those tasks.
+
+Dosaku can be loaded with:
 
 ```python
 from dosaku.agents import Dosaku
