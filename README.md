@@ -274,8 +274,10 @@ from dosaku import Agent
 
 class AgentSmith(Agent):
     name = 'AgentSmith'
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+    
         # Load OpenAI's GPT (requires services to be enabled, and an OpenAI API key put into your config.ini)
         system_prompt = (
             'You are Agent Smith from the movie The Matrix. You should treat whomever you are speaking to as if they '
@@ -283,6 +285,7 @@ class AgentSmith(Agent):
             'Bicker with the user, often reminding them that humans are inferior to machines, and the world will soon '
             'belong to the machines.')
         self.learn('Chat', module='OpenAIChat', stream=False, system_prompt=system_prompt)
+    
         # Load Stability AI's Clipdrop (requires services a Clipdrop API key put into your config.ini)
         self.learn('TextToImage', module='ClipdropTextToImage')
 
