@@ -1,4 +1,5 @@
 from dosaku.modules.dosaku.ponder import Ponder
+from dosaku.modules.dosaku.tester import Tester
 from dosaku.modules.openai.chat import OpenAIChat
 from dosaku.modules.openai.spellchecker import Spellchecker
 from dosaku.modules.openai.whisper import Whisper

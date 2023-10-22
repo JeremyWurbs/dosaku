@@ -4,7 +4,7 @@ from warnings import warn
 
 if TYPE_CHECKING:
     from dosaku import Module
-from dosaku import ModuleInfo
+from dosaku import ModuleInfo, ExecutorPermissionRequired, ServicePermissionRequired, ModuleForTaskNotFound
 
 
 class ModuleManager:
@@ -45,11 +45,13 @@ class ModuleManager:
             except Exception as err:
                 raise RuntimeError(f'Unable to load module {module}. Could not instantiate module.\n\n{err}')
             if module_instance.is_service and allow_services is False:
-                raise RuntimeError(f'Loaded module was a service, but services have not been enabled. Enable services '
-                                   f'or load a non-service module.')
+                raise ServicePermissionRequired(
+                    f'Loaded module was a service, but services have not been enabled. Enable services or load a '
+                    f'non-service module.')
             if module_instance.is_executor and allow_executors is False:
-                raise RuntimeError(f'Loaded module was an executor, but executors have not been enabled. Enable '
-                                   f'executors or load a non-executor module.')
+                raise ExecutorPermissionRequired(
+                    f'Loaded module was an executor, but executors have not been enabled. Enable executors or load a '
+                    f'non-executor module.')
             self._modules[module] = module_instance
 
             dependencies = self._modules_info[module].dependencies

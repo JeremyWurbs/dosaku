@@ -4,11 +4,10 @@ from dosaku import Agent
 class Dosaku(Agent):
     name = 'Dosaku'
 
-    def __init__(self, **kwargs):
+    def __init__(self, stream_chat: bool = True, **kwargs):
         super().__init__(**kwargs)
 
-        if self.services_enabled is False:
-            raise ValueError('Dosaku requires services to be enabled. Pass in enable_services=True on init.')
+        self._assert_services_enabled()
 
         system_prompt = (
             'You are an AI personal assistant, named Dosaku.'
@@ -32,7 +31,7 @@ class Dosaku(Agent):
         self.learn(
             'Chat',
             module='OpenAIChat',
-            stream=True,
+            stream=stream_chat,
             model=self.config['OPENAI']['DEFAULT_MODEL'],
             system_prompt=system_prompt,
             temperature=0.1,

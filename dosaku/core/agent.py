@@ -1,6 +1,7 @@
 from typing import Dict, List, Optional, Union
 
-from dosaku import Config, Task, task_hub, module_manager
+from dosaku import (Config, Task, task_hub, module_manager,
+                    ServicePermissionRequired, ExecutorPermissionRequired, ModuleForTaskNotFound)
 from dosaku.core.actor import Actor
 from dosaku import tasks  # Do not remove: allows all tasks in the dosaku.tasks namespace to register themselves
 from dosaku import modules  # Do not remove: allows all modules in the dosaku.modules namespace to register themselves
@@ -52,6 +53,11 @@ class Agent:
     def services_enabled(self):
         return self._allow_services
 
+    def _assert_services_enabled(self):
+        if not self.services_enabled:
+            raise ServicePermissionRequired(
+                f'{self.__class__} requires services be enabled. Pass in enable_services=True on init.')
+
     def enable_executors(self):
         self._allow_executors = True
 
@@ -62,6 +68,11 @@ class Agent:
     def executors_enabled(self):
         return self._allow_executors
 
+    def _assert_executors_enabled(self):
+        if not self.executors_enabled:
+            raise ExecutorPermissionRequired(
+                f'{self.__class__} requires executors to be enabled. Pass in enable_executors=True on init.')
+
     def learn(self, task: Union[str, Task], module: Optional[str] = None, force_relearn=False, **kwargs):
         if isinstance(task, Task):
             task = task.name
@@ -69,7 +80,7 @@ class Agent:
         if module is None:
             modules = self.task_hub.registered_modules(task)
             if modules is None:
-                raise ValueError(f'There are no known modules which have registered the task {task}.')
+                raise ModuleForTaskNotFound(f'There are no known modules which have registered the task {task}.')
             module = modules[0]
 
         print(f'Attemping to learn {task} via the module {module}.')

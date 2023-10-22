@@ -1,3 +1,7 @@
+from dosaku.core.exceptions import (ExecutorPermissionRequired,
+                                    InterpreterError,
+                                    ModuleForTaskNotFound,
+                                    ServicePermissionRequired)
 from dosaku.config.config import Config
 from dosaku.core.actor import Actor
 from dosaku.core.task_connection import TaskConnection
