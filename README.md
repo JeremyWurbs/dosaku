@@ -119,7 +119,7 @@ agent.doc('RestoreFaces', action='restore')
 Which will print the following text, including a complete example on how to learn and use the `restore` action.
 
 ```python
-"""Restore faces in given image.
+"""Restore faces in the given image.
 
     Args:
         image: The input image. It may contain one or more disfigured or low-quality faces.
@@ -172,9 +172,12 @@ The answer is a Module.
 
 Modules live in the machine space. They are programs that do *something*. Modules can be anything, really. To be used by
 Dosaku, however, they must register (i.e. claim that they can do) at least one task. When we ask Dosaku to 
-*learn* something, what we are doing is asking Dosaku to *load* (download, install, load into memory, etc.) a *module* 
-program able to do the *task*. Later, when Dosaku does the *task*, what it is actually doing is running the *module* 
-program. 
+*learn* something, what we are doing is asking Dosaku to *load* a *module* program able to do the *task*. Later, when 
+Dosaku does the *task*, what it is actually doing is running the *module* program. Behind the scenes the agent is taking 
+care of downloading, installing, and running modules while managing associated (e.g. GPU) resources.
+
+Sometimes a module will only do one task. Sometimes one module will handle many tasks. Fortunately as a user, you only 
+need to worry and interface with your agent about the tasks it knows.
 
 Following the above RestoreFaces example, you can see what tasks your agent knows and which modules have been loaded 
 with:
