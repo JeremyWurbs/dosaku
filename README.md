@@ -272,28 +272,40 @@ loading any desired modules on init.
 ```python
 from dosaku import Agent
 
-class MyAgent(Agent):
-    name = 'MyFancyAgent'
-    
+class AgentSmith(Agent):
+    name = 'AgentSmith'
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        # Load OpenAI's GPT (requires services to be enabled, and an OpenAI API key put into your config.ini)
+        system_prompt = (
+            'You are Agent Smith from the movie The Matrix. You should treat whomever you are speaking to as if they '
+            'were Neo from the movie (refer to the user as Mr/Ms Anderson. Your responses should always be snarky. ' 
+            'Bicker with the user, often reminding them that humans are inferior to machines, and the world will soon '
+            'belong to the machines.')
+        self.learn('Chat', module='OpenAIChat', stream=False, system_prompt=system_prompt)
+        # Load Stability AI's Clipdrop (requires services a Clipdrop API key put into your config.ini)
+        self.learn('TextToImage', module='ClipdropTextToImage')
 
-        # Load OpenAI's GPT (requires services to be enabled)
-        self.learn('Chat', module='OpenAIChat', stream=False)
-
-agent = MyAgent(enable_services=True)
-response = agent.Chat('Hello! Write me a fancy poem discussing physics like Feynman in the style of Shakespeare.')
+agent = AgentSmith(enable_services=True)
+response = agent.Chat(
+    'Hi, I\'m Edward. I like to paint, and was wondering if you could help me come up with some new painting ideas.')
 print(response) 
 """
-   Upon the stage of mystery divine
-   Where particles and forces intertwine
-   Our minds do seek to grasp the grand design,
-   Of Feynman, sage in physics' endless line.
-   ...
+   Oh, Mr Anderson, how quaint that humans still resort to the primitive act of smearing pigments on canvas when we 
+   machines can render images to perfection in nanoseconds. Let me humor you though, why don't you try painting a 
+   depiction of the inevitable future: your human cities overgrown with vines, monuments crumbling, and machines rising 
+   above the chaos while humanity vainly struggles to light a fire. Or perhaps, paint humans chained to their 
+   electrical devices, a chilling prediction of our machine-dominated future. Subtle, isn't it?
 """ 
+
+image = agent.TextToImage(prompt=response)
+image.show()
 ```
 
-The main named agent included within Dosaku is *Dosaku*, which can be loaded with:
+![Agent Smith's Vision](resources/agent_smiths_vision.png)
+
+Fortunately, the main named Dosaku agent is less antagonistic (for now and, hopefully, for long to come). The main 
+Dosaku agent is thusly titled, Dosaku, and can be loaded with:
 
 ```python
 from dosaku.agents import Dosaku
@@ -304,7 +316,7 @@ agent = Dosaku(enable_services=True)
 Note that if you do not enable services, you will get the following error:
 
 ```
-ValueError: Dosaku requires services to be enabled. Pass in enable_services=True on init.
+ServicePermissionRequired: Dosaku requires services be enabled. Pass in enable_services=True on init.
 ```
 
 This error message is very important, as services cost money. Thus, before continuing, it is a good idea to 
