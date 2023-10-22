@@ -564,5 +564,5 @@ A new directory dosacku/docs/_build should appear, containing the Dosaku package
 ## Contributing
 
 You are encouraged to contribute! For information on contributing, refer to the 
-[Dosaku package readme](dosaku/README.md).
+[contrib readme](contrib.md).
 
