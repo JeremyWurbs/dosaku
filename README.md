@@ -209,7 +209,7 @@ Which will print information regarding using the module, including the following
 from PIL import Image
 from dosaku.modules import GFPGAN
 
-gfpgan = GFPGAN(arch='RestoreFormer')
+gfpgan = GFPGAN(upscale=4)
 
 image = Image.open('tests/resources/hopper_photograph.png')
 restoration = gfpgan.restore(image)
@@ -220,7 +220,7 @@ from PIL import Image
 from dosaku import Agent
 
 agent = Agent()
-agent.learn('RestoreFaces', module='GFPGAN', arch='RestoreFormer')
+agent.learn('RestoreFaces', module='GFPGAN', upscale=4)
 
 image = Image.open('tests/resources/hopper_photograph.png')
 restoration = agent.RestoreFaces.restore(image)
@@ -233,7 +233,8 @@ note the general structure of Dosaku:
 - **Tasks** translate a high-level *task* into a human-interpretible machine API;
 - **Modules** implement one or more tasks;
 - **Agents** communicate with a user, ultimately learning and doing *tasks* for the user; in the background the 
-    agent is managing modules (and services, described later), to actually do the tasks.
+    agent is managing modules (and the advanced modules: services and executors, described later), to actually do the 
+    tasks.
 
 ### Agents
 
