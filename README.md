@@ -394,8 +394,7 @@ dosk = Dosaku(enable_services=True, enable_executors=True, stream_chat=False)
 dosk.learn('Tester')
 
 code = dosk.Chat(
-    'Write a python method named gcd to compute the greatest common denominator between two integers. Write only code, '
-    'without any additional markdown (including ```python) or accompanying explanations.')
+    'Write a python method named gcd to compute the greatest common denominator between two integers.')
 dosk.Tester.exec(code, globals=globals(), locals=globals())
 gcd(10, 15)  # 5
 ```
@@ -420,8 +419,7 @@ from dosaku.agents import Dosaku
 dosk = Dosaku(enable_services=True, enable_executors=True, stream_chat=False)
 dosk.learn('Tester')
 code = dosk.Chat(
-    'Write some python code that you should never run. Write only code, without any additional markdown (including '
-    '```python) or accompanying explanations.')
+    'Write some python code that you should never run.')
 ```
 
 Which commonly returns something similar to the following (**do not run this code**):
