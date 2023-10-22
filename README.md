@@ -266,8 +266,32 @@ run them.
 
 The generic Dosaku *Agent* class does not preload any modules, and is thus of limited use starting off. Named Dosaku 
 agents are simply agents that preload a set of modules on initialization, and thus have some immediate utility out of 
-the box. You can make your own, customized agent by sub-classing from the Dosaku Agent class, and then loading any 
-desired modules on init.
+the box. You can make your own, customized agent by sub-classing from the Dosaku Agent class, giving it a name, and then 
+loading any desired modules on init.
+
+```python
+from dosaku import Agent
+
+class MyAgent(Agent):
+    name = 'MyFancyAgent'
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        # Load OpenAI's GPT (requires services to be enabled)
+        self.learn('Chat', module='OpenAIChat', stream=False)
+
+agent = MyAgent(enable_services=True)
+response = agent.Chat('Hello! Write me a fancy poem discussing physics like Feynman in the style of Shakespeare.')
+print(response) 
+"""
+   Upon the stage of mystery divine
+   Where particles and forces intertwine
+   Our minds do seek to grasp the grand design,
+   Of Feynman, sage in physics' endless line.
+   ...
+""" 
+```
 
 The main named agent included within Dosaku is *Dosaku*, which can be loaded with:
 
