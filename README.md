@@ -451,15 +451,29 @@ modules, however, you are again ultimately responsible for whatever code they ru
 In general, only use modules you trust, as they are likely downloading data (AI models with associated weights) to your
 machine, where they will subsequently be run. And, definitely, only use services you both trust *and* understand how 
 much money using them costs. There are no limits within Dosaku itself— so before you ask the OpenAIChat module to 
-generate a hundred-thousand word novel, it would be a good idea to look at [OpenAI's pricing](https://openai.com/pricing). 
+generate a hundred-thousand word novel, it would be a good idea to look at 
+[OpenAI's pricing](https://openai.com/pricing). 
 
-By enabling services, you are indicating that you are responsible for how much money Dosaku spends on your behalf.
+Many of the module-creation executors iteratively generate, test (i.e. run), and debug code. They can be very useful 
+tools in enabling Dosaku to implement the tasks necessary to complete a user request. But, again, one last time: **you 
+are responsible for any code Dosaku runs on your behalf**. If you do not want to take the risk, do not enable executors 
+for your agents. 
 
-Note that if you haven't signed up to a third party service, given them your credit card number and copied the
-associated API key into your Dosaku config file, nothing in Dosaku will cost money and, hopefully, the worst that can 
-happen is you download a model too big for your machine and crash it. If you have done those things, however, 
-because you e.g. want to use GPT-4 to power Dosaku, then you are completely responsible for how much money Dosaku 
-spends using those services.
+### Take me away from danger
+
+If you just want to create an AI agent without spending money or potentially deleting all the files on your machine (or 
+worse), **don't**:
+
+- Sign up for OpenAI or the third party services;
+- Give a third party service your credit card number;
+- Put the associate third party service API key in your Dosaku config.ini file;
+- Enable any agent to run executor modules;
+
+If you *don't* do those things, then Dosaku will not cost money and, hopefully, the worst that can happen is you 
+download an AI model too big for your machine and crash it. 
+
+If you *have* done those things, then you are implicitly responsible for what Dosaku does in response. If you are in 
+doubt, head over to the Dosaku discord server and ask for help ^^
 
 ### Working with Dosaku
 
