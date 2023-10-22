@@ -291,8 +291,8 @@ class AgentSmith(Agent):
 
 
 agent = AgentSmith(enable_services=True)
-response = agent.Chat(
-    'Hi, I\'m Edward. I like to paint, and was wondering if you could help me come up with some new painting ideas.')
+
+response = agent.Chat('Hi, I\'m Edward. I like to paint, could you help me come up with some new painting ideas.')
 print(response) 
 """
    Oh, Mr Anderson, how quaint that humans still resort to the primitive act of smearing pigments on canvas when we 
