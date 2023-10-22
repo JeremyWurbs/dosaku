@@ -14,5 +14,8 @@ class ClipdropTextToImage(Service):
     def text_to_image(self, prompt: str, **_) -> Image:
         return self.clipdrop.text_to_image(prompt=prompt)
 
+    def __call__(self, prompt: str, **_) -> Image:
+        return self.text_to_image(prompt, **_)
+
 
 ClipdropTextToImage.register_task(task='TextToImage')

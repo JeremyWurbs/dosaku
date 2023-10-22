@@ -23,7 +23,7 @@ class OpenAIChat(Service):
         self.stream = stream
         self.temperature = temperature
         self.history = None
-        self.clear_chat()
+        self.reset_chat()
 
     def message(self, message: str, **kwargs) -> Union[str, Generator[str, None, None]]:
         if self.stream:  # return generator object that will stream response
@@ -75,7 +75,7 @@ class OpenAIChat(Service):
                     self.history[-1]['content'] = partial_message
                 yield partial_message
 
-    def clear_chat(self):
+    def reset_chat(self):
         self.history = [{'role': 'system', 'content': self.system_prompt}]
 
     def __call__(self, message: str, **kwargs):
@@ -89,7 +89,7 @@ class OpenAIChat(Service):
 
 
 OpenAIChat.register_action('message')
-OpenAIChat.register_action('clear_chat')
+OpenAIChat.register_action('reset_chat')
 OpenAIChat.register_action('__call__')
 OpenAIChat.register_task('OpenAIChat')
 OpenAIChat.register_task('Chat')

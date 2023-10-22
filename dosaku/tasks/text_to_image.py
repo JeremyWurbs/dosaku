@@ -13,5 +13,9 @@ class TextToImage(Task):
     def text_to_image(self, prompt: str, **kwargs) -> Image:
         raise NotImplementedError
 
+    @abstractmethod
+    def __call__(self, prompt: str, **kwargs) -> Image:
+        return self.text_to_image(prompt, **kwargs)
+
 
 TextToImage.register_task()
