@@ -154,6 +154,9 @@ class Module(ABC):
             sys.stdout = codeOut
             sys.stderr = codeErr
 
+            error_message = lambda error_class, line_number, description, detail: \
+                f'{error_class} at line {line_number} of {description}: {detail}'
+
             try:
                 exec(code, globals, locals)
 
@@ -161,22 +164,21 @@ class Module(ABC):
                 error_class = err.__class__.__name__
                 detail = err.args[0]
                 line_number = err.lineno
+                codeErr.write(error_message(error_class, line_number, description, detail))
 
             except Exception as err:
                 error_class = err.__class__.__name__
                 detail = err.args[0]
                 cl, exc, tb = sys.exc_info()
                 line_number = traceback.extract_tb(tb)[-1][1]
-
-            else:
-                return codeOut.getvalue(), codeErr.getvalue()
+                codeErr.write(error_message(error_class, line_number, description, detail))
 
             finally:
                 # restore stdout and stderr
                 sys.stdout = sys.__stdout__
                 sys.stderr = sys.__stderr__
 
-            raise InterpreterError(f'{error_class} at line {line_number} of {description}: {detail}')
+            return codeOut.getvalue(), codeErr.getvalue()
 
         else:
             raise ExecutorPermissionRequired(

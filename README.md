@@ -487,7 +487,7 @@ agent = Agent(enable_services=True)
 agent.learn('Chat', module='OpenAIChat', model='gpt-3.5-turbo', stream=True)
 
 def predict(message, _):
-    for partial_response in agent.Chat(message):  # __call__() defaults to message()
+    for partial_response in agent.Chat(message): 
         yield partial_response
 
 gr.ChatInterface(predict).queue().launch()
