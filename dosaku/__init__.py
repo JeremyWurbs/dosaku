@@ -13,4 +13,5 @@ from dosaku.core.task import Task
 from dosaku.core.module import Module
 from dosaku.core.service import Service
 from dosaku.core.executor import Executor
+from dosaku.core.stm import ShortTermModule
 from dosaku.core.agent import Agent
