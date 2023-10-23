@@ -5,9 +5,7 @@ from dosaku import Executor, InterpreterError
 
 
 class ShortTermModule(Executor):
-    """Module that can be initiated dynamically.
-
-    A ShortTermModule is an Executor that runs dynamically generated code.
+    """Executor that runs dynamically generated code.
 
     Note that the module will be deleted when it loses scope or the application ends. To use a given ShortTermModule in
     the future, save it as a standard Module.
@@ -26,26 +24,27 @@ class ShortTermModule(Executor):
 
         code = agent.Coder(
             'Write two methods, gcd and collatz. The gcd method should take two integers and compute their greatest '
-            'common denominator. The collatz method should take a single integer and return is 3n+1 collatz path.')
+            'common denominator. The collatz method should take a single integer and return its 3n+1 collatz path.')
         stm = ShortTermModule(name='HelperMathMethods', code=code, actions=['gcd', 'collatz'])
 
         print(code)
         \"\"\"
         # Here is the Python code for the gcd and collatz functions
+
         def gcd(a, b):
             # Finding the greatest common denominator
             while(b):
                 a, b = b, a % b
             return a
+
         def collatz(n):
-            sequence = [n]
             # Generating the collatz sequence
+            sequence = [n]
             while n != 1:
                 if n % 2 == 0: # n is even
                     n = n / 2
                 else: # n is odd
                     n = 3 * n + 1
-
                 sequence.append(n)
             return sequence
         \"\"\"
