@@ -109,7 +109,7 @@ class Ponder(Service):
 
     def __init__(self, model: Optional[str] = None):
         openai.api_key = self.config['API_KEYS']['OPENAI']
-        self.model = ifnone(model, self.config['OPENAI']['DEFAULT_MODEL'])
+        self.model = ifnone(model, default=self.config['OPENAI']['DEFAULT_MODEL'])
 
     def _get_filename(self, conversation: OpenAIChat) -> str:
         output_filename = conversation.message(
