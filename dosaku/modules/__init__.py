@@ -4,6 +4,7 @@ from dosaku.modules.openai.chat import OpenAIChat
 from dosaku.modules.dosaku.coder import Coder
 from dosaku.modules.openai.spellchecker import Spellchecker
 from dosaku.modules.openai.whisper import Whisper
+from dosaku.modules.openai.zero_shot_text_classification import OpenAIZeroShotTextClassification
 from dosaku.modules.microsoft.deberta import DeBERTa
 from dosaku.modules.samples.song_serializer.json_serializer import JsonSerializer
 from dosaku.modules.samples.song_serializer.xml_serializer import XmlSerializer
