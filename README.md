@@ -34,11 +34,6 @@ dosaku_gui
 If you have questions or just want to join the community, head over to our 
 [discord server](https://discord.gg/xy6w22Ht)! 
 
-There we discuss different directions and side projects to integrate with 
-Dosaku.
-
-https://github.com/DosakuNet/dosaku/tree/main#discord
-
 # Deep Dive
 
 ## Installation
