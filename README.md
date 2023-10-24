@@ -29,6 +29,12 @@ dosaku_gui
 
 ![Dosaku Chat](resources/chat_sample.png)
 
+# Discord
+
+If you have questions or just want to join the community, head over to our 
+[discord server](https://discord.gg/xy6w22Ht), where we discuss different directions and side projects to integrate with 
+Dosaku.
+
 # Deep Dive
 
 ## Installation
