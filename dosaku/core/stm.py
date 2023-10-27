@@ -68,6 +68,7 @@ class ShortTermModule(Executor):
             raise InterpreterError(err)
 
         for action in actions:
+            self.register_action(func=action)
             action_copy = copy.copy(action)  # capture the action into the _Actor namespace
 
             class _Actor:
