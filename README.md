@@ -31,7 +31,7 @@ dosaku_gui
 
 # Discord
 
-If you have questions or just want to join the community, head over to our 
+If you have questions, or just want to join the community, head over to our 
 [discord server](https://discord.gg/Mk4Nzvyt)! 
 
 # Deep Dive
