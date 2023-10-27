@@ -5,18 +5,25 @@ from dosaku import Task
 
 
 class Chat(Task):
-    """Interface for a generic conversational chatbot."""
+    """Interface for a generic conversational chatbot.
+
+    A chat module is not obligated to support streaming, but if stream=True is passed in on init and the module does not
+    support streaming, it must raise an OptionNotSupported exception.
+
+    Args:
+        stream: Whether to stream messages.
+    """
     name = 'Chat'
 
-    def __init__(self):
-        super().__init__()
+    @abstractmethod
+    def __init__(self, stream: bool = False, *args, **kwargs):
+        raise NotImplementedError
 
     @abstractmethod
     def message(self, message: str, **kwargs) -> Union[str, Generator[str, None, None]]:
         """Send a message to the agent and get a response.
 
-        It is up to the chat module whether a chat history is kept and used. It is also up to the module whether
-        streaming is supported.
+        It is up to the chat module whether a chat history is kept and used.
 
         Args:
             message: The message to send the chat agent.
@@ -26,7 +33,7 @@ class Chat(Task):
 
                 - non-streaming: The expected default behavior, if a module is in non-streaming mode it should return
                     the response as a string directly;
-                - streaming: If the module supports and is set to streaming, it should return a generator object that
+                - streaming: If the module is set to stream the response, it should return a generator object that
                     yields an updated string response every iteration;
 
         Non-streaming Example::
@@ -34,7 +41,7 @@ class Chat(Task):
             from dosaku import Agent
 
             agent = Agent()
-            agent.learn('Chat', module='EchoBot')
+            agent.learn('Chat', module='EchoBot', stream=False)
             response = agent.Chat.message('Hello!')  # Hi, I'm EchoBot. You said: "Hello!".
 
         Streaming Example::
