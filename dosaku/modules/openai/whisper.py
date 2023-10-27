@@ -8,6 +8,7 @@ from dosaku.modules import Spellchecker
 
 
 class Whisper(Module):
+    """OpenAI's speech-to-text Whisper model."""
     name = 'Whisper'
 
     def __init__(self, spellcheck: bool = False, spellcheck_model: Optional[str] = None, key_terms: List[str] = None):

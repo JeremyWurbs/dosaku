@@ -27,7 +27,7 @@ class OpenAIZeroShotTextClassification(Service):
         '\n'
         'The gcd method takes two integers and computes their greatest common denominator.\"\n'
         '\n'
-        'As one of the following labels: [\'general chat\', \'code\', \'plan to complete task\']\n'
+        'As one of the following labels: [\'general chat\', \'code\', \'high level plan\']\n'
         '\n'
         'code'
     )
@@ -43,7 +43,7 @@ class OpenAIZeroShotTextClassification(Service):
         self.system_prompt = ifnone(system_prompt, default=self.default_system_prompt)
         self.temperature = temperature
 
-    def classify(self, text: str, labels: List[str]) -> ZeroShotTextClassification.TextClassification:
+    def evaluate(self, text: str, labels: List[str]) -> ZeroShotTextClassification.TextClassification:
         conversation = OpenAIChat(system_prompt=self.system_prompt, temperature=self.temperature)
         message = f'Classify the text: {text}\n\nAs one of the following labels: {labels}\n\n'
         classification = conversation.message(message=message)
@@ -52,7 +52,7 @@ class OpenAIZeroShotTextClassification(Service):
         )
 
     def __call__(self, text: str, labels: List[str]) -> ZeroShotTextClassification.TextClassification:
-        return self.classify(text=text, labels=labels)
+        return self.evaluate(text=text, labels=labels)
 
 
 OpenAIZeroShotTextClassification.register_task('ZeroShotTextClassification')
