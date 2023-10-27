@@ -1,12 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List
 
-from dosaku import Actor, task_hub
+from dosaku import Actor, task_hub, NameAttributeNotFound
 
 
 class Task(ABC):
-    #api_concrete_methods = list()
-
     @property
     @abstractmethod
     def name(self):
@@ -16,7 +14,6 @@ class Task(ABC):
     def api(cls) -> List[str]:
         api_concrete_methods = getattr(cls, 'api_concrete_methods', list())
         return api_concrete_methods + list(cls.__abstractmethods__)
-        #return list(cls.__abstractmethods__)
 
     @classmethod
     def docs(cls) -> Dict[str, str]:
@@ -30,6 +27,10 @@ class Task(ABC):
 
     @classmethod
     def register_task(cls):
+        if not isinstance(cls.name, str):
+            raise NameAttributeNotFound(
+                f'A unique string name attribute is required, but was not found for task {cls}. Make sure '
+                f'to add a name attribute to your task.')
         task_hub.register_task(task=cls.name, api=cls.api(), docs=cls.docs())
 
     @classmethod

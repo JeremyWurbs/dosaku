@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional, Union
 
-from dosaku import (Config, Task, task_hub, module_manager,
+from dosaku import (Config, module_manager, ShortTermModule, Task, task_hub,
                     ServicePermissionRequired, ExecutorPermissionRequired, ModuleForTaskNotFound)
 from dosaku.core.actor import Actor
 from dosaku import tasks  # Do not remove: allows all tasks in the dosaku.tasks namespace to register themselves
@@ -14,6 +14,7 @@ class Agent:
 
     def __init__(self, enable_services: bool = False, enable_executors: bool = False):
         self._known_tasks: Dict[str: List[str]] = dict()
+        self._memorized_tasks: Dict[str: List[str]] = dict()
         self._allow_services = enable_services
         self._allow_executors = enable_executors
 
@@ -21,13 +22,14 @@ class Agent:
     def register_task(cls, task: Task):
         cls.task_hub.register_task(task)
 
-    @classmethod
-    def api(cls, task: str):
-        return cls.task_hub.api(task)
+    def api(self, task: str):
+        if task in self.task_hub.tasks:
+            return self.task_hub.api(task)
+        elif task in self.memorized_tasks:
+            return self._memorized_tasks[task]
 
-    @classmethod
-    def doc(cls, task: str, action: Optional[str] = None):
-        return cls.task_hub.doc(task=task, action=action)
+    def doc(self, task: str, action: Optional[str] = None):
+        return self.task_hub.doc(task=task, action=action)
 
     @property
     def learnable_tasks(self):
@@ -35,7 +37,15 @@ class Agent:
 
     @property
     def tasks(self):
+        return self.known_tasks + self.memorized_tasks
+
+    @property
+    def known_tasks(self):
         return list(self._known_tasks.keys())
+
+    @property
+    def memorized_tasks(self):
+        return list(self._memorized_tasks)
 
     def registered_modules(self, task: str):
         return self.task_hub.registered_modules(task)
@@ -74,6 +84,7 @@ class Agent:
                 f'{self.__class__} requires executors to be enabled. Pass in enable_executors=True on init.')
 
     def learn(self, task: Union[str, Task], module: Optional[str] = None, force_relearn=False, **kwargs):
+        """Learn a task via a pre-existing module."""
         if isinstance(task, Task):
             task = task.name
 
@@ -110,3 +121,11 @@ class Agent:
                 actor_object = getattr(self, task)
                 setattr(actor_object, method, module_attr)
         self._known_tasks[task] = self.task_hub.api(task)
+
+    def memorize(self, stm: ShortTermModule, actions: Optional[Union[str, List[str]]] = None):
+        setattr(self, stm.name, stm)
+        if actions is None:
+            actions = list(stm.api().keys())
+        elif isinstance(actions, str):
+            actions = list(actions)
+        self._memorized_tasks[stm.name] = actions
