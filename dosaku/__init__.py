@@ -1,6 +1,10 @@
-from dosaku.core.exceptions import (ExecutorPermissionRequired,
+from dosaku.core.exceptions import (ActionDoesNotExist,
+                                    CodingError,
+                                    ExecutorPermissionRequired,
                                     InterpreterError,
                                     ModuleForTaskNotFound,
+                                    NameAttributeNotFound,
+                                    OptionNotSupported,
                                     ServicePermissionRequired)
 from dosaku.config.config import Config
 from dosaku.core.actor import Actor
