@@ -2,7 +2,8 @@ import gradio as gr
 
 from dosaku.agents import Dosaku
 
-dosk = Dosaku(enable_services=True)
+STREAM = False
+dosk = Dosaku(enable_services=True, enable_executors=True, stream_chat=STREAM)
 
 
 def main():
@@ -12,7 +13,7 @@ def main():
         with gr.Row():
             msg = gr.Textbox(show_label=False, placeholder='Type message')
         with gr.Accordion('Microphone'):
-                microphone = gr.Microphone(streaming=True, show_label=False)
+                microphone = gr.Audio(source='microphone', streaming=True, show_label=False)
                 auto_response = gr.Checkbox(label='Auto send message', value=True)
                 use_spellchecker = gr.Checkbox(label='Use spellchecker', value=True)
         streaming_audio = gr.State(False)
@@ -23,9 +24,16 @@ def main():
             return "", history + [[message, None]]
 
         def predict(history):
-            for partial_response in dosk.Chat(history[-1][0]):
-                history[-1][1] = partial_response
-                yield history
+            user_message = history[-1][0]
+            if STREAM:
+                pass
+                #for partial_response in dosk.Chat(user_message):
+                #    history[-1][1] = partial_response
+                #    yield history
+            else:
+                context = dosk(user_message)
+                history[-1][1] = context.conversation.history()[-1].message
+                return history
 
         def start_audio_stream():
             dosk.RealtimeSpeechToText.reset_stream()
