@@ -5,7 +5,8 @@ from dosaku.core.exceptions import (ActionDoesNotExist,
                                     ModuleForTaskNotFound,
                                     NameAttributeNotFound,
                                     OptionNotSupported,
-                                    ServicePermissionRequired)
+                                    ServicePermissionRequired,
+                                    UnsupportedActionType)
 from dosaku.config.config import Config
 from dosaku.core.actor import Actor
 from dosaku.core.task_connection import TaskConnection

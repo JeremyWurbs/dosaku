@@ -28,3 +28,7 @@ class OptionNotSupported(NotImplementedError):
 
 class ServicePermissionRequired(PermissionError):
     """Raised when the current resource requires Service permissions, but does not have it."""
+
+
+class UnsupportedActionType(AttributeError):
+    """Raised when the given action is not a supported type."""

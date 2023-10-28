@@ -1,10 +1,13 @@
-from typing import Dict, List, Optional, Union
+from __future__ import annotations
+from typing import Dict, List, Optional, TYPE_CHECKING, Union
 
 from dosaku import (Config, module_manager, ShortTermModule, Task, task_hub,
                     ServicePermissionRequired, ExecutorPermissionRequired, ModuleForTaskNotFound)
 from dosaku.core.actor import Actor
 from dosaku import tasks  # Do not remove: allows all tasks in the dosaku.tasks namespace to register themselves
 from dosaku import modules  # Do not remove: allows all modules in the dosaku.modules namespace to register themselves
+if TYPE_CHECKING:
+    from dosaku.logic import Context
 
 
 class Agent:
@@ -129,3 +132,17 @@ class Agent:
         elif isinstance(actions, str):
             actions = list(actions)
         self._memorized_tasks[stm.name] = actions
+
+    def memorize_from_context(self, context: Context) -> Context:
+        """Memorizes a ShortTermModule from the given context.
+
+        The context must have stored the ShortTermModule in its short_term_memory attribute.
+        """
+        from dosaku.tasks import Chat  # avoid circular import
+        self.memorize(context.short_term_memory)
+        message = Chat.Message(
+            sender='assistant',
+            message=f'Memorized the ShortTermModule {context.short_term_memory.name} from the context\'s short term '
+                    f'memory.')
+        context.conversation.add_message(message)
+        return context

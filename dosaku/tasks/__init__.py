@@ -13,3 +13,5 @@ from dosaku.tasks.dosaku.write_task import WriteTask
 from dosaku.tasks.dosaku.write_module import WriteModule
 from dosaku.tasks.dosaku.write_module_from_task import WriteModuleFromTask
 from dosaku.tasks.dosaku.text_evaluator import TextEvaluator
+from dosaku.tasks.dosaku.logic import (LogicActor,
+                                       LogicEvaluator)

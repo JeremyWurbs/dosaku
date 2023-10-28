@@ -21,3 +21,4 @@ from dosaku.modules.meta.sam import SegmentAnything
 from dosaku.modules.meta.bart import BART
 from dosaku.modules.tencent.gfpgan import GFPGAN
 from dosaku.modules.kakao.karlo import KarloImageBlend
+from dosaku.modules.dosaku.implementer import Implementer

@@ -1,7 +1,9 @@
 from typing import List, Optional, Union
 
-from dosaku import Config, Executor, Service, ShortTermModule
+from dosaku import CodingError, Config, Executor, Service, ShortTermModule
+from dosaku.logic import Context
 from dosaku.modules import OpenAIChat
+from dosaku.tasks import Chat
 from dosaku.utils import ifnone, clean_code
 
 
@@ -231,6 +233,35 @@ class Coder(Executor, Service):
 
         return ShortTermModule(name=name, code=clean_code(code), actions=actions)
 
+    def code_from_context(self, context: Context) -> Context:
+        """Generates code according the context instruction."""
+        code = self.write_code(description=context.instruction)
+        context.conversation.add_message(Chat.Message(sender='assistant', message=code))
+        return context
+
+    def stm_from_context(self, context: Context) -> Context:
+        """Generates stm according to the last Assistant message."""
+        code = None
+        for message in reversed(context.conversation.history()):
+            if message.sender == 'assistant':
+                code = message.message
+                break
+
+        if code is None:
+            raise CodingError(
+                'Requested to create an ShortTermModule from code, but code could not be found from context.')
+
+        stm = self.create_stm(code)
+        context.short_term_memory = stm
+
+        response = Chat.Message(
+            sender='assistant',
+            message='ShortTermModule created and placed into the context\'s short term memory.'
+        )
+        context.conversation.add_message(response)
+
+        return context
+
     def __call__(self, description: str, max_tries: Optional[int] = None, return_intermediate_tries: bool = False) -> str:
         return self.write_code(
             description=description, max_tries=max_tries, return_intermediate_tries=return_intermediate_tries)
@@ -238,5 +269,7 @@ class Coder(Executor, Service):
 
 Coder.register_action('write_code')
 Coder.register_action('create_stm')
+Coder.register_action('code_from_context')
+Coder.register_action('stm_from_context')
 Coder.register_action('__call__')
 Coder.register_task('Coder')

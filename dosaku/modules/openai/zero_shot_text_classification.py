@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from dosaku import Service
+from dosaku.logic import Context
 from dosaku.modules import OpenAIChat
 from dosaku.tasks import ZeroShotTextClassification
 from dosaku.utils import ifnone
@@ -50,6 +51,9 @@ class OpenAIZeroShotTextClassification(Service):
         return ZeroShotTextClassification.TextClassification(
             classification=classification
         )
+
+    def evaluate_from_context(self, context: Context, labels: List[str]) -> str:
+        return self.evaluate(text=context.instruction, labels=labels).classification
 
     def __call__(self, text: str, labels: List[str]) -> ZeroShotTextClassification.TextClassification:
         return self.evaluate(text=text, labels=labels)

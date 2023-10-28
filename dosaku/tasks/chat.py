@@ -1,5 +1,6 @@
 from abc import abstractmethod
-from typing import Generator, Union
+from dataclasses import dataclass
+from typing import Generator, List, Union
 
 from dosaku import Task
 
@@ -13,6 +14,12 @@ class Chat(Task):
     Args:
         stream: Whether to stream messages.
     """
+
+    @dataclass
+    class Message:
+        sender: str
+        message: str
+
     name = 'Chat'
 
     @abstractmethod
@@ -78,8 +85,26 @@ class Chat(Task):
         """
 
     @abstractmethod
+    def add_message(self, message: Message):
+        """Add message to the conversation history without generating response."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def reset_chat(self):
+        """Reset the chat to its starting state."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def history(self) -> List[Message]:
+        raise NotImplementedError
+
+    @abstractmethod
     def __call__(self, *args, **kwargs):
         return self.message(*args, **kwargs)
+
+    @abstractmethod
+    def __str__(self):
+        raise NotImplementedError
 
 
 Chat.register_task()
