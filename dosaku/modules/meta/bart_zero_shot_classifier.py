@@ -6,12 +6,12 @@ from dosaku import Module
 from dosaku.tasks import ZeroShotTextClassification
 
 
-class BART(Module):
-    """Meta's BART model.
+class BARTZeroShotClassifier(Module):
+    """Meta's BART model set up for zero shot classification.
 
     Refer to the `paper <https://arxiv.org/abs/1909.00161>`_ for model details.
     """
-    name = 'BART'
+    name = 'BARTZeroShotClassifier'
 
     def __init__(self, device='cuda'):
         super().__init__()
@@ -33,4 +33,4 @@ class BART(Module):
         return self.classify(text=text, labels=labels)
 
 
-BART.register_task('ZeroShotTextClassification')
+BARTZeroShotClassifier.register_task('ZeroShotTextClassification')

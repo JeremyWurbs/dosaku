@@ -4,6 +4,7 @@ from dosaku.tasks.speech_to_text import SpeechToText
 from dosaku.tasks.realtime_speech_to_text import RealtimeSpeechToText
 from dosaku.tasks.chat import Chat
 from dosaku.tasks.zero_shot_text_classification import ZeroShotTextClassification
+from dosaku.tasks.text_summarization import TextSummarization
 from dosaku.tasks.gradio_chat import GradioChat
 from dosaku.tasks.gtp_v1 import GoTextProtocolV1
 from dosaku.tasks.object_detection.object_detection import ObjectDetection
