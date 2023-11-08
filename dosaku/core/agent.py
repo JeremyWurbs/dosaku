@@ -4,9 +4,11 @@ from typing import Dict, List, Optional, TYPE_CHECKING, Union
 from dosaku import (Config, module_manager, ShortTermModule, Task, task_hub,
                     ServicePermissionRequired, ExecutorPermissionRequired, ModuleForTaskNotFound)
 from dosaku.core.actor import Actor
+from dosaku.utils import ifnone
 from dosaku import tasks  # Do not remove: allows all tasks in the dosaku.tasks namespace to register themselves
 from dosaku import modules  # Do not remove: allows all modules in the dosaku.modules namespace to register themselves
 if TYPE_CHECKING:
+    from dosaku.tasks import Chat
     from dosaku.logic import Context
 
 
@@ -15,31 +17,47 @@ class Agent:
     task_hub = task_hub
     module_manager = module_manager
 
-    def __init__(self, enable_services: bool = False, enable_executors: bool = False):
+    def __init__(self, name: str = 'Agent', enable_services: bool = False, enable_executors: bool = False):
+        self.name = name
         self._known_tasks: Dict[str: List[str]] = dict()
         self._memorized_tasks: Dict[str: List[str]] = dict()
         self._allow_services = enable_services
         self._allow_executors = enable_executors
+        self.subagents: Dict[str, Agent] = dict()
 
     @classmethod
     def register_task(cls, task: Task):
         cls.task_hub.register_task(task)
 
+    def spawn_subagent(self, name, enable_services: Optional[bool] = None, enable_executors: Optional[bool] = None):
+        enable_services = ifnone(enable_services, default=self.services_enabled)
+        enable_executors = ifnone(enable_executors, default=self.executors_enabled)
+        if name in self.subagents.keys():
+            raise ValueError(f'Sub agent {name} already exists.')
+        self.subagents[name] = Agent(name=name, enable_services=enable_services, enable_executors=enable_executors)
+
+    def remove_subagent(self, name):
+        del self.subagents[name]
+
     def api(self, task: str):
+        """Returns the actions for the given task."""
         if task in self.task_hub.tasks:
             return self.task_hub.api(task)
         elif task in self.memorized_tasks:
             return self._memorized_tasks[task]
 
     def doc(self, task: str, action: Optional[str] = None):
+        """Returns documentation on the given task action."""
         return self.task_hub.doc(task=task, action=action)
 
     @property
     def learnable_tasks(self):
+        """Returns a list of all learnable tasks."""
         return list(self.task_hub.tasks.keys())
 
     @property
     def tasks(self):
+        """Returns a list of all known tasks, both learned and memorized."""
         return self.known_tasks + self.memorized_tasks
 
     @property
@@ -126,6 +144,7 @@ class Agent:
         self._known_tasks[task] = self.task_hub.api(task)
 
     def memorize(self, stm: ShortTermModule, actions: Optional[Union[str, List[str]]] = None):
+        """Equivalent to learn, but for dynamically generated code made available through a ShortTermModule."""
         setattr(self, stm.name, stm)
         if actions is None:
             actions = list(stm.api().keys())
