@@ -11,6 +11,25 @@ class TextToImage(Task):
 
     @abstractmethod
     def text_to_image(self, prompt: str, **kwargs) -> Image:
+        """Generate an image given a prompt.
+
+        Args:
+            prompt: A text prompt describing the image to create.
+
+        Returns:
+            A PIL image.
+
+        Example::
+
+            from dosaku import agent
+
+            agent = Agent()
+            agent.learn('TextToImage')
+
+            image = agent.TextToImage.text_to_image(prompt='An astronaut riding a horse; photographic 8k, f/1.4')
+            image.show()
+
+        """
         raise NotImplementedError
 
     @abstractmethod
