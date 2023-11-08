@@ -23,5 +23,4 @@ from dosaku.modules.meta.bart_zero_shot_classifier import BARTZeroShotClassifier
 from dosaku.modules.meta.bart_summarizer import BARTSummarizer
 from dosaku.modules.tencent.gfpgan import GFPGAN
 from dosaku.modules.kakao.karlo import KarloImageBlend
-from dosaku.modules.dosaku.implementer import Implementer
 from dosaku.modules.dosaku.book_illustrator import BookIllustrator
