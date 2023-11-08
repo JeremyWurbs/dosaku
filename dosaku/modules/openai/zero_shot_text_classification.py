@@ -48,6 +48,11 @@ class OpenAIZeroShotTextClassification(Service):
         conversation = OpenAIChat(system_prompt=self.system_prompt, temperature=self.temperature)
         message = f'Classify the text: {text}\n\nAs one of the following labels: {labels}\n\n'
         classification = conversation.message(message=message)
+
+        # Remove any extra quotation marks, if given back
+        if classification[0] in ["'", '"'] and classification[-1] in ["'", '"']:
+            classification = classification[1:-1]
+
         return ZeroShotTextClassification.TextClassification(
             classification=classification
         )
