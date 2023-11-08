@@ -95,7 +95,9 @@ class OpenAIChat(Service):
                     self._history[-1]['content'] = partial_message
                 yield partial_message
 
-    def reset_chat(self):
+    def reset_chat(self, system_prompt: Optional[str] = None):
+        if system_prompt is not None:
+            self.system_prompt = system_prompt
         self._history = [{'role': 'system', 'content': self.system_prompt}]
 
     def history(self) -> List[Chat.Message]:

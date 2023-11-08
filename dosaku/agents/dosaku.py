@@ -1,6 +1,6 @@
-from typing import Optional
+from typing import Optional, Tuple
 
-from dosaku import Agent
+from dosaku import Agent, CodingError
 from dosaku.logic import Context, LogicNode
 from dosaku.tasks import Chat
 
@@ -8,7 +8,7 @@ from dosaku.tasks import Chat
 class Dosaku(Agent):
     name = 'Dosaku'
 
-    def __init__(self, stream_chat: bool = True, **kwargs):
+    def __init__(self, stream_chat: bool = False, **kwargs):
         super().__init__(**kwargs)
 
         self._assert_services_enabled()
@@ -78,9 +78,14 @@ class Dosaku(Agent):
             action=self.OpenAIChat.act_on_context
         )
 
+        #request_for_code = LogicNode(
+        #    label='request to write code',
+        #    action=self.Coder.code_from_context
+        #)
+
         request_for_code = LogicNode(
             label='request to write code',
-            action=self.Coder.code_from_context
+            action=self.Coder.agent_code_from_context
         )
 
         create_stm = LogicNode(
@@ -94,12 +99,35 @@ class Dosaku(Agent):
             action=self.memorize_from_context
         )
 
+        request_to_run_code = LogicNode(
+            label='request to run code',
+            action=self.run_code_from_context
+        )
+
         root.add_child(gen_chat)
         root.add_child(request_for_code)
+        root.add_child(request_to_run_code)
         root.add_child(create_stm)
         create_stm.add_child(memorize_stm)
 
         return root
+
+    def run_code(self, code: str) -> Tuple[str, str]:
+        response, err = self.Coder.exec(code, globals=globals(), locals=locals())
+        return response, err
+
+    def run_code_from_context(self, context: Context) -> Context:
+        code = self.Coder.fetch_code_from_context(context)
+        if code is None:
+            raise CodingError('Requested to run code, but code could not be found from context.')
+        response, err = self.run_code(code)
+        context.short_term_memory = {'response': response, 'err': err}
+        if len(err) > 0:
+            message = f'Code raised the following error: {err}'
+        else:
+            message = f'{response}'
+        self.context.conversation.add_message(Chat.Message(sender='assistant', message=message))
+        return context
 
     def __call__(self, message: str):
         self.context.conversation.add_message(Chat.Message(sender='user', message=message))
