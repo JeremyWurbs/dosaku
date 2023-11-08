@@ -1,1 +1,1 @@
-from dosaku.agents.dosaku import Dosaku
+"""Dosaku agents module."""

@@ -1,0 +1,1 @@
+"""Dosaku apps module."""
