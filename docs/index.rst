@@ -7,9 +7,10 @@ Welcome to Dosaku!
 ==================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
+   dosaku
 
 
 Indices and tables
