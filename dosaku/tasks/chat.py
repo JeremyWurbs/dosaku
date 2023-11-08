@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Generator, List, Union
+from typing import Generator, List, Optional, Union
 
 from dosaku import Task
 
@@ -48,15 +48,15 @@ class Chat(Task):
             from dosaku import Agent
 
             agent = Agent()
-            agent.learn('Chat', module='EchoBot', stream=False)
-            response = agent.Chat.message('Hello!')  # Hi, I'm EchoBot. You said: "Hello!".
+            agent.learn('Chat', module='OpenAIChat', stream=False)
+            response = agent.Chat.message('Hello!')  # Hi, how can I help you?.
 
         Streaming Example::
 
             from dosaku import Agent
 
             agent = Agent()
-            agent.learn('Chat', module='EchoBot', stream=True)
+            agent.learn('Chat', module='OpenAIChat', stream=True)
             for partial_response in agent.Chat.message('Hello!):
                 print(partial_response)
 
@@ -64,9 +64,16 @@ class Chat(Task):
             # Hi
             # Hi,
             # ...
-            # Hi, I'm EchoBot. You said: "Hello
-            # Hi, I'm EchoBot. You said: "Hello!
-            # Hi, I'm EchoBot. You said: "Hello!"
+            # Hi, how can I help yo
+            # Hi, how can I help you
+            # Hi, how can I help you?
+
+        Standalone Module Example::
+
+            from dosaku.modules import OpenAIChat
+
+            chat = OpenAIChat(stream=False)
+            response = chat.message('Hello!')  # Hi, how can I help you?.
 
         OpenAI GPT Streaming in a Gradio App Example (Requires the OpenAI service)::
 
@@ -90,7 +97,7 @@ class Chat(Task):
         raise NotImplementedError
 
     @abstractmethod
-    def reset_chat(self):
+    def reset_chat(self, system_prompt: Optional[str] = None):
         """Reset the chat to its starting state."""
         raise NotImplementedError
 
