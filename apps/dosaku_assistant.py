@@ -1,9 +1,13 @@
+import os
+
 import gradio as gr
 
-from dosaku.agents import Dosaku
+from dosaku.modules import GPT, Whisper
+from dosaku.tasks import Chat
 
 STREAM = False
-dosk = Dosaku(enable_services=True, enable_executors=True, stream_chat=STREAM)
+gpt = GPT()
+whisper = Whisper()
 
 
 def main():
@@ -15,7 +19,7 @@ def main():
         with gr.Accordion('Microphone'):
                 microphone = gr.Audio(source='microphone', streaming=True, show_label=False)
                 auto_response = gr.Checkbox(label='Auto send message', value=True)
-                use_spellchecker = gr.Checkbox(label='Use spellchecker', value=True)
+                use_spellchecker = gr.Checkbox(label='Use spellchecker', value=False)
         streaming_audio = gr.State(False)
 
         def reset_msg(message, history):
@@ -31,37 +35,46 @@ def main():
                 #    history[-1][1] = partial_response
                 #    yield history
             else:
-                context = dosk(user_message)
-                history[-1][1] = context.conversation.history()[-1].message
+                response = gpt.message(user_message)
+                history[-1][1] = response.message
+                if len(response.images) > 0:
+                    for image in response.images:
+                        image_path = os.path.join(os.path.dirname(__file__), 'tmp_image.png')
+                        image.save(image_path)
+                        history.append((None, (image_path,)))
                 return history
 
         def start_audio_stream():
-            dosk.RealtimeSpeechToText.reset_stream()
+            whisper.reset_stream()
             streaming_audio.value = True
             return ''
 
         def process_audio_stream(new_chunk):
             if streaming_audio.value is True:
-                text = dosk.RealtimeSpeechToText.stream(new_chunk)
+                text = whisper.stream(new_chunk)
             else:
-                text = dosk.RealtimeSpeechToText.text()
+                text = whisper.text()
             return text
 
         def stop_audio_stream(text, history, use_spellchecker, auto_response):
             streaming_audio.value = False
             if use_spellchecker:
-                text = dosk.Spellchecker(text)
-            dosk.RealtimeSpeechToText.text(text)
+                text = whisper.Spellchecker(text)
+            whisper.text(text)
 
             if auto_response:
                 history.append([text, None])
-                for partial_response in dosk.Chat(history[-1][0]):
-                    history[-1][1] = partial_response
-                    print(f'{partial_response}')
-                    yield '', history
+                response = gpt.message(history[-1][0])
+                history[-1][1] = response.message
+                if len(response.images) > 0:
+                    for image in response.images:
+                        image_path = os.path.join(os.path.dirname(__file__), 'tmp_image.png')
+                        image.save(image_path)
+                        history.append((None, (image_path,)))
+                return '', history
+
             else:
                 return text, history
-
 
         msg.submit(reset_msg, inputs=[msg, chatbot], outputs=[msg, chatbot], queue=False).then(
             predict, inputs=chatbot, outputs=chatbot

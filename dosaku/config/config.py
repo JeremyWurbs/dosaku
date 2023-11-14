@@ -24,7 +24,7 @@ class Config:
     Example::
 
         import json
-        from Dosaku import Config
+        from dosaku import Config
 
         config = Config()
         print(config['DOSAKU']['ROOT_DIR'])  # '/home/user/dosaku'
