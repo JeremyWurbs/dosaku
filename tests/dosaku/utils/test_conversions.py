@@ -25,7 +25,7 @@ def test_bytes_serialization(image: Image = mocks.image):
 
 def test_tensor_conversion(image: Image = mocks.image):
     tensor_image = pil_to_tensor(image)
-    pil_image = tensor_to_pil(tensor_image)
+    pil_image = tensor_to_pil(tensor_image, min_val=0, max_val=255)
     assert images_are_identical(image, pil_image)
 
 
