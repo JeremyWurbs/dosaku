@@ -1,19 +1,24 @@
 import logging
 import os
 
-from dosaku.utils import logger
+from dosaku import Config
+from dosaku.utils import default_logger
 
 
 def test_logger():
-    logger_ = logger(name='Dosaku',
-                     stream_level=logging.DEBUG,
-                     file_level=logging.DEBUG,
-                     file_name='test_logs.txt')
+    logs_filename = Config()['FILE_PATHS']['UNITTEST_LOGS']
+    logger = default_logger(
+        name='Dosaku',
+        stream_level=logging.DEBUG,
+        file_level=logging.DEBUG,
+        file_name=logs_filename)
 
-    logger_.debug('debug log')
-    logger_.info('info log')
-    logger_.warning('warning log')
-    logger_.error('error log')
-    logger_.critical('critical log')
+    logger.debug('debug log')
+    logger.info('info log')
+    logger.warning('warning log')
+    logger.error('error log')
+    logger.critical('critical log')
 
-    assert os.path.exists('test_logs.txt')
+    assert os.path.exists(logs_filename)
+    with open(logs_filename, mode='r') as logs:
+        assert len(logs.readlines()) == 5

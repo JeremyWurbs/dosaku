@@ -2,4 +2,4 @@
 from dosaku.utils.checks import ifnone
 from dosaku.utils.conversions import (pil_to_ascii, ascii_to_pil, pil_to_bytes, bytes_to_pil, pil_to_tensor,
                                       tensor_to_pil, pil_to_ndarray, ndarray_to_pil, pil_to_cv2, cv2_to_pil)
-from dosaku.utils.logging import formatter, logger
+from dosaku.utils.logging import default_formatter, default_logger

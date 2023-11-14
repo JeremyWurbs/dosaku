@@ -14,11 +14,16 @@ def test_functionality():
 
 def test_configuration():
     config = Config()
-    assert os.path.isdir(config['PATHS']['ROOT_DIR'])
-    assert isinstance(config['PATHS']['PACKAGE_DIR'], str)
-    assert isinstance(config['PATHS']['DATA_ROOT'], str)
-    assert isinstance(config['PATHS']['MODELS_ROOT'], str)
-    assert isinstance(config['PATHS']['APPS_ROOT'], str)
+    dirs = (
+        config['DIR_PATHS']['ROOT'],
+        config['DIR_PATHS']['PACKAGE'],
+        config['DIR_PATHS']['DATA'],
+        config['DIR_PATHS']['MODELS'],
+        config['DIR_PATHS']['APPS'],
+        config['DIR_PATHS']['LOGS'],
+    )
+    for dir in dirs:
+        assert os.path.isdir(dir)
 
 
 def test_config_not_found():
