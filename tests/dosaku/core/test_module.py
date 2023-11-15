@@ -2,7 +2,7 @@ import logging
 import pytest
 from unittest.mock import patch
 
-from dosaku import Config, Module
+from dosaku import Config, Module, ExecutorPermissionRequired
 from dosaku.utils import default_logger
 
 
@@ -28,9 +28,12 @@ class ModuleTest:
 
 def test_module():
     with ModuleTest() as module:
-        assert module.add_one(5) == 6
-        with open(Config()['FILE_PATHS']['UNITTEST_LOGS']) as file:
-            assert len(file.readlines()) == 1
+        assert module.is_service is False
+        assert module.is_executor is False
 
         with pytest.raises(NotImplementedError):
             print(module.name)
+
+        with pytest.raises(ExecutorPermissionRequired):
+            code = 'print("Hello, world.")'
+            module.exec(code)
