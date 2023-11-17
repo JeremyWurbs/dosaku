@@ -1,7 +1,9 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 import numpy as np
 from transformers import pipeline
+
+from dosaku.types import Audio
 
 
 class Whisper:
@@ -28,9 +30,10 @@ class Whisper:
 
     """
     name = 'Whisper'
+    model_name = 'openai/whisper-base.en'
 
     def __init__(self, spellcheck: bool = False, spellcheck_model: Optional[str] = None, key_terms: List[str] = None):
-        self.model = pipeline("automatic-speech-recognition", model="openai/whisper-base.en")
+        self.model = pipeline('automatic-speech-recognition', model=self.model_name)
         self.audio_stream = None
         self._text = None
         self.spellchecker = None
@@ -59,7 +62,7 @@ class Whisper:
             self._text = corrected_text
         return self._text
 
-    def transcribe(self, audio: Tuple[int, np.ndarray]) -> str:
+    def transcribe(self, audio: Audio) -> str:
         """Transcribe the given audio data.
 
         The audio data should be a tuple of the form (int, np.ndarray), where the first element is the sampling rate of
@@ -71,7 +74,7 @@ class Whisper:
         Returns:
             The transcribed text.
         """
-        sr, y = audio
+        sr, y = audio.sample_rate, audio.data
         y = y.astype(np.float32)
         y /= np.max(np.abs(y))
 
@@ -81,7 +84,7 @@ class Whisper:
 
         return self.text()
 
-    def stream(self, new_chunk: Tuple[int, np.ndarray]) -> str:
+    def stream(self, new_chunk: Audio) -> str:
         """Transcribe the given audio stream.
 
         The audio data should be a tuple of the form (int, np.ndarray), where the first element is the sampling rate of
@@ -95,7 +98,7 @@ class Whisper:
         Returns:
             The entire transcribed text up to that point. Use reset_stream to reset the transcribed text.
         """
-        sr, y = new_chunk
+        sr, y = new_chunk.sample_rate, new_chunk.data
         y = y.astype(np.float32)
         y /= np.max(np.abs(y))
 
