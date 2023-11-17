@@ -1,24 +1,15 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
 import io
-import logging
 import sys
 import traceback
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Tuple, Union
 
 
-from dosaku import Context, ExecutorPermissionRequired
+from dosaku import DosakuBase, ExecutorPermissionRequired
 from dosaku.utils import ifnone
 
 
-class Module(Context, ABC):
-    logger = logging.getLogger(__name__)
-
-    @property
-    @abstractmethod
-    def name(self) -> str:
-        raise NotImplementedError
-
+class Module(DosakuBase):
     @property
     def is_service(self) -> bool:
         return False
@@ -27,9 +18,8 @@ class Module(Context, ABC):
     def is_executor(self) -> bool:
         return False
 
-    @classmethod
     def exec(
-            cls,
+            self,
             code: str,
             globals: Dict[str, Any] = None,
             locals: Dict[str, Any] = None,
@@ -147,7 +137,7 @@ class Module(Context, ABC):
             output or consequences.
 
         """
-        if cls.is_executor is True:
+        if self.is_executor is True:
             globals = ifnone(globals, default={"__builtins__": {}})
 
             # create file-like string to capture output
@@ -185,8 +175,12 @@ class Module(Context, ABC):
             return codeOut.getvalue(), codeErr.getvalue()
 
         else:
+            try:
+                name = self.name + ' '
+            except NotImplementedError:
+                name = ''
             raise ExecutorPermissionRequired(
-                f'Module {cls.name} is not an executor, but tried to run exec. Only executors are allowed to run exec.')
+                f'Module {name} is not an executor, but tried to run exec. Only executors are allowed to run exec.')
 
     @classmethod
     def api(cls) -> Optional[Dict[str, str]]:
@@ -195,8 +189,9 @@ class Module(Context, ABC):
     @classmethod
     def docs(cls) -> Dict[str, str]:
         doc = {cls.name: cls.__doc__}
-        for attr in cls.api():
-            doc[attr] = getattr(cls, attr).__doc__
+        if cls.api() is not None:
+            for attr in cls.api():
+                doc[attr] = getattr(cls, attr).__doc__
         return doc
 
     @classmethod
@@ -209,19 +204,6 @@ class Module(Context, ABC):
             if doc is None:
                 doc = func.__doc__
         cls.api_task_actions[func] = doc
-
-    @classmethod
-    def register_dependency(cls, dependency: Union[str, Module]):
-        if isinstance(dependency, Module):
-            dependency = dependency.name
-        if getattr(cls, '_dependencies', None) is None:
-            cls._dependencies: List[str] = list()
-        cls._dependencies.append(dependency)
-
-    @classmethod
-    @property
-    def dependencies(cls):
-        return getattr(cls, '_dependencies', list())
 
     """
     @classmethod
