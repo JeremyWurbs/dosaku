@@ -16,11 +16,4 @@ class Chat:
         stream: Whether to stream messages.
     """
 
-    @dataclass
-    class Message:
-        sender: str
-        message: str
-        images: List[Image] = field(default_factory=list)
-        audio: List[np.ndarray] = field(default_factory=list)
-
     name = 'Chat'
