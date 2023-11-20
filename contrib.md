@@ -48,7 +48,7 @@ least once, and all common usage cases should be tested, including any corner ca
 To run the unit tests with code coverage statistics, run the following from the repo root directory:
 
 ```commandline
-pytest --cov=dosaku --cov-report term-missing tests
+pytest -rs --cov=dosaku --cov-report term-missing tests
 ```
 
 Note: running *all* the tests may take some time and require some rather beefy (24gb x2 GPUs) that you do not have. In 
