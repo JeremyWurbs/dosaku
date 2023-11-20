@@ -9,6 +9,7 @@ from openai.types import FileDeleted
 
 from dosaku import Config, Module
 from dosaku.tasks import Chat
+from dosaku.types import Message
 from dosaku.utils import ifnone, bytes_to_pil
 
 
@@ -59,7 +60,7 @@ class GPT(Module):
 
         self.assistant = None
         self.thread = None
-        self._history: Optional[List[Chat.Message]] = None
+        self._history: Optional[List[Message]] = None
         self.filenames = filenames
         self.files: Dict[str, str] = {}  # maps filenames to file IDs
         self.reset_chat()
@@ -118,7 +119,7 @@ class GPT(Module):
             content=text
         )
 
-    def message(self, text: str, instructions: Optional[str] = None) -> Chat.Message:
+    def message(self, text: str, instructions: Optional[str] = None) -> Message:
         """Send a message to the agent and get a response."""
         self.add_message(text)
 
@@ -155,14 +156,14 @@ class GPT(Module):
         self.logger.exception('NotImplementedError')
         raise NotImplementedError  # TODO
 
-    def parse_message(self, message_id) -> Chat.Message:
+    def parse_message(self, message_id) -> Message:
         # Retrieve the message object
         message = self.client.beta.threads.messages.retrieve(
             thread_id=self.thread.id,
             message_id=message_id)
 
         # Extract the message content
-        message_response = Chat.Message(sender=message.role, message='')
+        message_response = Message(sender=message.role, text='')
         for response in message.content:
             if isinstance(response, openai.types.beta.threads.message_content_image_file.MessageContentImageFile):
                 image_bytes = self.client.files.content(response.image_file.file_id).read()
@@ -181,10 +182,10 @@ class GPT(Module):
                         image_bytes = self.client.files.content(file_path.file_id).read()
                         message_response.images.append(bytes_to_pil(image_bytes))
                         annotations.append(f'[{index}] image {cited_file.filename}')
-                message_response.message += text.value
+                message_response.text += text.value
         return message_response
 
-    def history(self) -> List[Chat.Message]:
+    def history(self) -> List[Message]:
         return self._history
 
     def upload_file(self, filename: str):
@@ -208,8 +209,8 @@ class GPT(Module):
         else:
             return True, None
 
-    def __call__(self, message: str, **kwargs):
-        return self.message(message, **kwargs)
+    def __call__(self, text: str, **kwargs):
+        return self.message(text, **kwargs)
 
     def __str__(self):
         conv_str = ''
