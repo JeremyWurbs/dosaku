@@ -30,6 +30,7 @@ class Server:
 
         @_app.post('/chat')
         def chat(payload: ChatInput):
+            print(f'Server received request for chat with payload: {payload}')
             response = self.agent.chat(text=payload.text)
             return {'sender': response.sender, 'text': response.text}
 

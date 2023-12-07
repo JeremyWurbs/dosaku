@@ -8,7 +8,7 @@ from dosaku.utils import ascii_to_pil
 
 
 class Connection:
-    def __init__(self, host: str = 'http://localhost:8000/'):
+    def __init__(self, host: str = 'http://localhost:8080/'):
         self.host = host
 
     def list_commands(self) -> List[str]:
@@ -16,6 +16,7 @@ class Connection:
         return json.loads(response.content)['commands']
 
     def chat(self, text: str) -> Message:
+        print(f'Connection posting to {self.host + "chat"}')
         response = requests.request('POST', self.host + 'chat', json={'text': text})
         print(f'chat response: {response}')
         data = json.loads(response.content)

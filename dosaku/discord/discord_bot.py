@@ -14,7 +14,7 @@ from dosaku.backend import Server
 class DiscordBot(DosakuBase):
     def __init__(
             self,
-            host: str = 'http://localhost:8000/',
+            host: str = 'http://localhost:8080/',
             description='Dosaku Assistant',
             command_prefixes: Optional[List[str]] = None
     ):
