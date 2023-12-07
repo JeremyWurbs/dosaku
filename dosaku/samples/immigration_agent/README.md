@@ -32,6 +32,12 @@ immigration agent app below, alter it to be analogous to (assuming dosaku is loc
 PYTHONPATH=${HOME}/dosaku python dosaku/samples/immigration_agent/discord_bot.py --host http://localhost:8080/
 ```
 
+Finally, you will need API keys for (at minimum) OpenAI and Discord. Put these API keys into your 
+[config.ini](../../config/config.ini) file. The OpenAI key should come from your OpenAI account, and is for using GPT, 
+while the Discord key is the one associated with your discord bot application. Refer to the 
+[main readme](https://github.com/DosakuNet/dosaku/tree/immigration_agent#discord-ai-assistant)
+for more details.
+
 # Running the Immigration Agent
 
 Run the backend server:
