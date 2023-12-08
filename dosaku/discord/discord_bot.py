@@ -27,7 +27,13 @@ class DiscordBot(DosakuBase):
         self.intents.members = True
         self.intents.message_content = True
 
-    def run(self):
+        self.supported_commands = [
+            'list_commands',
+            'text_to_image',
+            'text_to_speech'
+        ]
+
+    def discord_bot(self):
         bot = commands.Bot(
             description=self.description,
             command_prefix=self.command_prefixes,
@@ -88,7 +94,11 @@ class DiscordBot(DosakuBase):
 
         @bot.command()
         async def list_commands(ctx):
-            await ctx.send(self.backend_server.commands())
+            message = 'Sure. I know the following commands, and can chat freely through DMs:\n'
+            for command in self.supported_commands:
+                message += f'\n\t>{command}'
+            message += '\n\nYou may DM me for further help in using my commands.'
+            await ctx.send(message)
 
         @bot.command()
         async def text_to_image(ctx, *, prompt: str):
@@ -97,6 +107,14 @@ class DiscordBot(DosakuBase):
             filename = os.path.join(self.config['DIR_PATHS']['TEMP'], 'image.png')
             image.save(filename)
             await ctx.send('Sure, how about this?', file=discord.File(filename))
+
+        @bot.command()
+        async def text_to_speech(ctx, *, text: Optional[str] = None):
+            print(f'Received text_to_speech request from user {ctx.author} with text: {text}')
+            filename = os.path.join(self.config['DIR_PATHS']['TEMP'], 'audio.mp3')
+            audio = self.backend_server.text_to_speech(text=text)
+            audio.write(filename=filename)
+            await ctx.send('Sure, here\'s the associated audio:', file=discord.File(filename))
 
         @bot.command()
         async def transcribe_audio(
@@ -129,4 +147,9 @@ class DiscordBot(DosakuBase):
                 self.voice = voice
                 await ctx.send(f'Certainly, I\'ll use the {voice} voice from now on.')
 
+        return bot
+
+    def connect_to_discord(self, bot=None):
+        if bot is None:
+            bot = self.discord_bot()
         bot.run(self.config['API_KEYS']['DISCORD'])

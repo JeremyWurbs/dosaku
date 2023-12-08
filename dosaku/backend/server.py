@@ -10,6 +10,7 @@ from dosaku.utils import pil_to_ascii
 from dosaku.backend.connection import Connection
 from dosaku.backend.types import (ChatInput,
                                   TextToImageInput,
+                                  TextToSpeechInput,
                                   TranscribeInterviewInput,
                                   VoiceInput)
 
@@ -24,7 +25,7 @@ class Server:
 
         _app = FastAPI()
 
-        @_app.post('/list-commands')
+        @_app.post('/commands')
         def list_commands():
             return {'commands': self.agent.commands()}
 
@@ -38,6 +39,11 @@ class Server:
         def text_to_image(payload: TextToImageInput):
             image = self.agent.text_to_image(prompt=payload.prompt)
             return {'prompt': payload.prompt, 'image': pil_to_ascii(image)}
+
+        @_app.post('/text-to-speech')
+        def text_to_speech(payload: TextToSpeechInput):
+            audio = self.agent.text_to_speech(text=payload.text)
+            return {'text': payload.text, 'audio': audio.to_ascii()}
 
         @_app.post('/transcribe-interview')
         def transcribe_interview(payload: TranscribeInterviewInput):

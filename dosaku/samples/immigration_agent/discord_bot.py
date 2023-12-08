@@ -1,6 +1,6 @@
 import argparse
 
-from dosaku import DiscordBot
+from dosaku.samples.immigration_agent.immigration_agent import ImmigrationAgent
 
 
 def main():
@@ -8,8 +8,8 @@ def main():
     parser.add_argument('--host', type=str, nargs='?', default='http://localhost:8080/')
     opt = parser.parse_args()
 
-    db = DiscordBot(host=opt.host)
-    db.run()
+    agent = ImmigrationAgent(host=opt.host)
+    agent.connect_to_discord()
 
 
 if __name__ == '__main__':
