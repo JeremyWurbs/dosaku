@@ -2,18 +2,20 @@ import glob
 from math import floor
 import os
 import requests
+from typing import Dict
 
 import discord
 
 from dosaku import DiscordBot
 from dosaku.modules import GPT
+from dosaku.types import ChatHistory
 
 
 class ImmigrationAgent(DiscordBot):
     def __init__(self, description='Immigration Agent', **kwargs):
         super().__init__(description=description, **kwargs)
         self.supported_commands += ['upload_pdfs']
-        self.user_chat_histories = {}
+        self.user_chat_histories: Dict[str, ChatHistory] = {}
 
     @classmethod
     def pdf_filenames(cls, dir_path):
@@ -44,6 +46,7 @@ class ImmigrationAgent(DiscordBot):
         bot.remove_command('on_message')
         @bot.event
         async def on_message(message):
+            self.logger.debug(f'Received message from user {message.author}.')
             # Make sure we do not reply to ourselves
             if message.author.id == bot.user.id:
                 return
@@ -55,23 +58,18 @@ class ImmigrationAgent(DiscordBot):
 
             # Else if the message is a DM maintain a standard chat convo
             if not message.guild or True:  # message is a DM
+                self.logger.debug(f'Message from {message.author} sent to free DM chat. Message: {message.content}')
                 try:
-                    print(f'User {message.author} sent a chat query: {message.content}')
                     filenames = self.pdf_filenames(self.user_dir(message.author.name))
-                    print(f'Using filenames: {filenames}')
 
                     with GPT(filenames=filenames) as gpt:
                         response = gpt.message(text=message.content)
-                        print(f'response: {response.text}')
 
                     max_len = 2000
-                    print(f'response & len: {response.text} ({len(response.text)})')
                     num_chunks = max(floor(len(response.text) // max_len), 1)
-                    print(f'num_chunks: {num_chunks}')
                     for idx in range(num_chunks):
                         start = idx * max_len
                         end = (idx + 1) * max_len
-                        print(f'await: {response.text[start:end]}')
                         await message.channel.send(response.text[start:end])
                     if len(response.images) > 0:
                         for image in response.images:
@@ -81,11 +79,13 @@ class ImmigrationAgent(DiscordBot):
                                 discord_image = discord.File(image_bytes)
                                 await message.channel.send(file=discord_image)
                             await message.channel.send(file=filename)
-                except discord.errors.Forbidden:
-                    pass
+                    self.logger.debug(f'Returning DM message from user {message.author}.')
+                except discord.errors.Forbidden as err:
+                    self.logger.exception(f'Error raised in processing message from user {message.author}:\n{err}')
 
             # Else if the message mentions us in some way, add a reply on how to use us.
             elif 'dosaku' in message.content.lower():
+                self.logger.debug(f'Message from {message.author} sent to channel chat. Message: {message.content}')
                 try:
                     response = (
                         f'Hello! If you\'re trying to chat with me, you can chat with me freely by DMing me. You may '
@@ -96,6 +96,7 @@ class ImmigrationAgent(DiscordBot):
                         f'>text_to_image An astronaut riding a horse, 4k photograph f/1.4'
                     )
                     await message.reply(response, mention_author=True)
+                    self.logger.debug(f'Returning channel message from user {message.author}.')
                 except discord.errors.Forbidden:
                     pass
 
