@@ -13,6 +13,7 @@ class ImmigrationAgent(DiscordBot):
     def __init__(self, description='Immigration Agent', **kwargs):
         super().__init__(description=description, **kwargs)
         self.supported_commands += ['upload_pdfs']
+        self.user_chat_histories = {}
 
     @classmethod
     def pdf_filenames(cls, dir_path):
@@ -26,7 +27,7 @@ class ImmigrationAgent(DiscordBot):
 
         @bot.command()
         async def upload_pdfs(ctx):
-            print(f'Received upload_files request from user {ctx.author}')
+            self.logger.debug(f'Received upload_files request from user {ctx.author}.')
             for idx, attachment in enumerate(ctx.message.attachments):
                 attachment_url = attachment.url
                 print(f'Attachment url: {attachment_url}')
@@ -36,6 +37,7 @@ class ImmigrationAgent(DiscordBot):
                 filename = os.path.join(user_dir, f'file_{idx}.pdf')
                 with open(filename, mode='bw') as file:
                     file.write(file_request.content)
+            self.logger.debug(f'Returning upload_files request for user {ctx.author}.')
             await ctx.message.channel.send('Sure, I\'ll refer to these documents for future replies.')
 
         # Overwrite the on_message event from Dosaku

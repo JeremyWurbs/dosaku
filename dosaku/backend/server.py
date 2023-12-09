@@ -5,6 +5,7 @@ from fastapi import FastAPI
 
 if TYPE_CHECKING:
     from dosaku import BackendAgent
+from dosaku import DosakuBase
 from dosaku.agents import Dosaku
 from dosaku.utils import pil_to_ascii
 from dosaku.backend.connection import Connection
@@ -15,8 +16,9 @@ from dosaku.backend.types import (ChatInput,
                                   VoiceInput)
 
 
-class Server:
+class Server(DosakuBase):
     def __init__(self, agent: Optional[BackendAgent] = None):
+        super().__init__()
         self.agent = agent
 
     def app(self):
@@ -66,4 +68,5 @@ class Server:
 
 def app():
     server = Server()
+    server.logger.info(f'Starting Server {server.name}.')
     return server.app()

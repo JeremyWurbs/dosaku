@@ -1,6 +1,10 @@
 import argparse
+import logging
+import os
 
+from dosaku import Config
 from dosaku.samples.immigration_agent.immigration_agent import ImmigrationAgent
+from dosaku.utils import default_logger
 
 
 def main():
@@ -9,6 +13,12 @@ def main():
     opt = parser.parse_args()
 
     agent = ImmigrationAgent(host=opt.host)
+    agent.logger = default_logger(
+        name=agent.name,
+        stream_level=logging.DEBUG,
+        file_level=logging.INFO,
+        file_name=os.path.join(Config()['DIR_PATHS']['LOGS'], 'immigration_agent_discord_bot_logs.txt')
+    )
     agent.connect_to_discord()
 
 
