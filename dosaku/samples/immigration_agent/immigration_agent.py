@@ -8,7 +8,7 @@ import discord
 
 from dosaku import DiscordBot
 from dosaku.modules import GPT
-from dosaku.types import ChatHistory
+from dosaku.types import ChatHistory, Message
 
 
 class ImmigrationAgent(DiscordBot):
@@ -21,8 +21,8 @@ class ImmigrationAgent(DiscordBot):
     def pdf_filenames(cls, dir_path):
         return glob.glob(os.path.join(dir_path, '*.pdf'))
 
-    def user_dir(self, name):
-        return os.path.join(self.config['DIR_PATHS']['DISCORD'], name)
+    def user_dir(self, name) -> str:
+        return str(os.path.join(self.config['DIR_PATHS']['DISCORD'], name))
 
     def discord_bot(self):
         bot = super().discord_bot()
@@ -61,8 +61,13 @@ class ImmigrationAgent(DiscordBot):
                 self.logger.debug(f'Message from {message.author} sent to free DM chat. Message: {message.content}')
                 try:
                     filenames = self.pdf_filenames(self.user_dir(message.author.name))
+                    if message.author.name not in self.user_chat_histories.keys():
+                        self.user_chat_histories[message.author.name] = ChatHistory()
+                    user_message = Message(sender='user', text=message.content)
+                    self.user_chat_histories[message.author.name].add_message(user_message)
 
                     with GPT(filenames=filenames) as gpt:
+                        # TODO: pass user chat history to GPT
                         response = gpt.message(text=message.content)
 
                     max_len = 2000
