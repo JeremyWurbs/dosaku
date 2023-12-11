@@ -12,6 +12,9 @@ class TimerCollection:
 
     Example::
 
+        import time
+        from dosaku.utils import TimerCollection
+
         tc = TimerCollection()
         tc.start('Timer 1')
         tc.start('Timer 2')

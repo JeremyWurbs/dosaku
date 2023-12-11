@@ -10,6 +10,9 @@ class Timer:
 
     Example::
 
+        import time
+        from dosaku.utils import Timer
+
         timer = Timer()
         timer.start()
         time.sleep(1)
