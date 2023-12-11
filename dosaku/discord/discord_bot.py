@@ -75,8 +75,8 @@ class DiscordBot(DosakuBase):
                                 await message.channel.send(file=discord_image)
                             await message.channel.send(file=filename)
                     self.logger.debug(f'Returning DM message from user {message.author}.')
-                except discord.errors.Forbidden:
-                    pass
+                except discord.errors.Forbidden as err:
+                    self.logger.exception(f'Error raised in processing message from user {message.author}:\n{err}')
 
             # Else if the message mentions us in some way, add a reply on how to use us.
             elif 'dosaku' in message.content.lower():
