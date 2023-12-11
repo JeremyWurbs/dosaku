@@ -4,3 +4,5 @@ from dosaku.utils.conversions import (pil_to_ascii, ascii_to_pil, pil_to_bytes, 
                                       tensor_to_pil, pil_to_ndarray, ndarray_to_pil, pil_to_cv2, cv2_to_pil)
 from dosaku.utils.logging import default_formatter, default_logger
 from dosaku.utils.image import canny, fit, center, erode, binary_mask_to_alpha, insert_image
+from dosaku.utils.timer import Timer
+from dosaku.utils.timer_collection import TimerCollection
