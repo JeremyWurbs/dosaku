@@ -18,11 +18,8 @@ class BARTSummarizer(Module):
             model="facebook/bart-large-cnn",
             device=device)
 
-    def summarize(self, text: str, min_length: str = 30, max_length: str = 130, do_sample: bool = False) -> str:
+    def summarize(self, text: str, min_length: int = 30, max_length: int = 130, do_sample: bool = False) -> str:
         return self.model(text, min_length=min_length, max_length=max_length, do_sample=do_sample)[0]['summary_text']
 
     def __call__(self, *args, **kwargs) -> str:
         return self.summarize(*args, **kwargs)
-
-
-#BARTSummarizer.register_task('TextSummarization')
