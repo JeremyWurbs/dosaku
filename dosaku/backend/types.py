@@ -9,6 +9,10 @@ class TextToImageInput(BaseModel):
     prompt: str
 
 
+class TextToSpeechInput(BaseModel):
+    text: str
+
+
 class TranscribeInterviewInput(BaseModel):
     audio_file: str
     interviewer: str

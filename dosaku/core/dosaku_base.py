@@ -14,6 +14,7 @@ class DosakuBase:
     def __init__(self, suppress: bool = False):
         self.suppress = suppress
         self._logger = logging.getLogger(self.__module__)
+        self.logger.debug(f'Initialized {self.__class__} object with id: {id(self)}.')
 
     @property
     def unique_name(self) -> str:
@@ -32,9 +33,11 @@ class DosakuBase:
         self._logger = new_logger
 
     def __enter__(self):
+        self.logger.debug({f'Initializing {self.name} as a context manager.'})
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        self.logger.debug(f'Exiting context manager for {self.name}.')
         if exc_type is not None:
             info = (exc_type, exc_val, exc_tb)
             self.logger.exception("Exception occurred", exc_info=info)

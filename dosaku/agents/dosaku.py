@@ -88,11 +88,11 @@ class Dosaku(Service, BackendAgent):
     def busy(self) -> bool:
         return self._busy
 
-    def connect_to_discord(self):
+    def discord_bot(self):
         description = '''An example bot to showcase the discord.ext.commands extension
-            module.
+                    module.
 
-            There are a number of utility commands being showcased here.'''
+                    There are a number of utility commands being showcased here.'''
 
         intents = discord.Intents.default()
         intents.members = True
@@ -209,10 +209,6 @@ class Dosaku(Service, BackendAgent):
             image = bytes_to_pil(file_request.content)
             image.show()
 
-
-
-
-
         @bot.command()
         async def text_to_speech(ctx, *, text: Optional[str] = None):
             print(f'Received text_to_speech request from user {ctx.author} with text: {text}')
@@ -237,6 +233,10 @@ class Dosaku(Service, BackendAgent):
                 chapter.audio.write(filename)
                 await ctx.send('', file=filename)
 
+        return bot
+
+    def connect_to_discord(self):
+        bot = self.discord_bot()
         bot.run(self.config['API_KEYS']['DISCORD'])
         #try:
         #    await bot.start(self.config['API_KEYS']['DISCORD'])

@@ -14,7 +14,7 @@ from dosaku.backend import Server
 class DiscordBot(DosakuBase):
     def __init__(
             self,
-            host: str = 'http://localhost:8000/',
+            host: str = 'http://localhost:8080/',
             description='Dosaku Assistant',
             command_prefixes: Optional[List[str]] = None
     ):
@@ -27,7 +27,13 @@ class DiscordBot(DosakuBase):
         self.intents.members = True
         self.intents.message_content = True
 
-    def run(self):
+        self.supported_commands = [
+            'list_commands',
+            'text_to_image',
+            'text_to_speech'
+        ]
+
+    def discord_bot(self):
         bot = commands.Bot(
             description=self.description,
             command_prefix=self.command_prefixes,
@@ -35,11 +41,11 @@ class DiscordBot(DosakuBase):
 
         @bot.event
         async def on_ready():
-            print(f'Logged in as {bot.user} (ID: {bot.user.id})')
-            print('------')
+            self.logger.info(f'Logged in as {bot.user} (ID: {bot.user.id}).')
 
         @bot.event
         async def on_message(message):
+            self.logger.debug(f'Received message from user {message.author}.')
             # Make sure we do not reply to ourselves
             if message.author.id == bot.user.id:
                 return
@@ -51,8 +57,8 @@ class DiscordBot(DosakuBase):
 
             # Else if the message is a DM maintain a standard chat convo
             if not message.guild:  # message is a DM
+                self.logger.debug(f'Message from {message.author} sent to free DM chat. Message: {message.content}')
                 try:
-                    print(f'User {message.author} sent a chat query: {message.content}')
                     response = self.backend_server.chat(text=message.content)
                     max_len = 2000
                     num_chunks = max(floor(len(response.text) // max_len), 1)
@@ -68,11 +74,13 @@ class DiscordBot(DosakuBase):
                                 discord_image = discord.File(image_bytes)
                                 await message.channel.send(file=discord_image)
                             await message.channel.send(file=filename)
-                except discord.errors.Forbidden:
-                    pass
+                    self.logger.debug(f'Returning DM message from user {message.author}.')
+                except discord.errors.Forbidden as err:
+                    self.logger.exception(f'Error raised in processing message from user {message.author}:\n{err}')
 
             # Else if the message mentions us in some way, add a reply on how to use us.
             elif 'dosaku' in message.content.lower():
+                self.logger.debug(f'Message from {message.author} sent to channel chat. Message: {message.content}')
                 try:
                     response = (
                         f'Hello! If you\'re trying to chat with me, you can chat with me freely by DMing me. You may '
@@ -83,20 +91,37 @@ class DiscordBot(DosakuBase):
                         f'>text_to_image An astronaut riding a horse, 4k photograph f/1.4'
                     )
                     await message.reply(response, mention_author=True)
-                except discord.errors.Forbidden:
-                    pass
+                    self.logger.debug(f'Returning channel message from user {message.author}.')
+                except discord.errors.Forbidden as err:
+                    self.logger.exception(f'Error raised in processing message from user {message.author}:\n{err}')
 
         @bot.command()
         async def list_commands(ctx):
-            await ctx.send(self.backend_server.commands())
+            self.logger.debug(f'Received list_commands request from user {ctx.author}.')
+            message = 'Sure. I know the following commands, and can chat freely through DMs:\n'
+            for command in self.supported_commands:
+                message += f'\n\t>{command}'
+            message += '\n\nYou may DM me for further help in using my commands.'
+            self.logger.debug(f'Returning list_commands request for user {ctx.author}:\n{message}')
+            await ctx.send(message)
 
         @bot.command()
         async def text_to_image(ctx, *, prompt: str):
-            print(f'Received t2i request from user {ctx.author} with prompt: {prompt}')
+            self.logger.debug(f'Received text_to_image request from user {ctx.author} with prompt: {prompt}')
             image = self.backend_server.text_to_image(prompt)
             filename = os.path.join(self.config['DIR_PATHS']['TEMP'], 'image.png')
             image.save(filename)
+            self.logger.debug(f'Returning text_to_image request for user {ctx.author} with image saved to {filename}.')
             await ctx.send('Sure, how about this?', file=discord.File(filename))
+
+        @bot.command()
+        async def text_to_speech(ctx, *, text: Optional[str] = None):
+            self.logger.debug(f'Received text_to_speech request from user {ctx.author} with text: {text}')
+            filename = os.path.join(self.config['DIR_PATHS']['TEMP'], 'audio.mp3')
+            audio = self.backend_server.text_to_speech(text=text)
+            audio.write(filename=filename)
+            self.logger.debug(f'Returning text_to_speech request for user {ctx.author} with audio save to {filename}.')
+            await ctx.send('Sure, here\'s the associated audio:', file=discord.File(filename))
 
         @bot.command()
         async def transcribe_audio(
@@ -104,11 +129,9 @@ class DiscordBot(DosakuBase):
                 interviewer: Optional[str] = 'Interviewer',
                 interviewee: Optional[str] = 'Interviewee'
         ):
-            print(f'Received transcribe_audio request from user {ctx.author}')
+            self.logger.debug(f'Received transcribe_audio request from user {ctx.author}.')
             attachment_url = ctx.message.attachments[0].url
-            print(f'Attachment url: {attachment_url}')
             file_request = requests.get(attachment_url)
-            print(f'Download response: {file_request}')
             filename = os.path.join(self.config['DIR_PATHS']['TEMP'], 'audio.mp3')
             with open(filename, 'wb') as audio_file:
                 audio_file.write(file_request.content)
@@ -118,15 +141,23 @@ class DiscordBot(DosakuBase):
                 interviewer=interviewer,
                 interviewee=interviewee
             )
-            print(f'Transcription:\n\n{transcription}')
+            self.logger.debug(f'Returning transcribe_audio request for user {ctx.author}.')
             await ctx.send(f'{transcription}')
 
         @bot.command()
         async def set_voice(ctx, voice: str):
+            self.logger.debug(f'Received set_voice request from user {ctx.author} to voice {voice}.')
             if voice is None or voice not in self.backend_server.voices():
                 await ctx.send(f'I do not know that voice. Please select one of {self.backend_server.voices()}')
             else:
                 self.voice = voice
                 await ctx.send(f'Certainly, I\'ll use the {voice} voice from now on.')
+            self.logger.debug(f'Returning set_voice request for user {ctx.author}.')
 
+        return bot
+
+    def connect_to_discord(self, bot=None):
+        self.logger.debug(f'Received request connect_to_discord for {self.name}.')
+        if bot is None:
+            bot = self.discord_bot()
         bot.run(self.config['API_KEYS']['DISCORD'])
