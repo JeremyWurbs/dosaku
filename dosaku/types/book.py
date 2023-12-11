@@ -42,4 +42,4 @@ class Book:
                 image_filename = os.path.join(dir, f'chapter{chapter_idx}_image{image_idx}.png')
                 image.save(image_filename)
             audio_filename = os.path.join(dir, f'audio_{chapter_idx}.mp3')
-            chapter.audio.stream_to_file(file=audio_filename)
+            chapter.audio.write(filename=audio_filename)
