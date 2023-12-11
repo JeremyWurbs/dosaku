@@ -10,7 +10,28 @@ class TimerCollection:
     timer can be retrieved at any time. If a timer is stopped and restarted, the duration will be added to the previous
     duration. The timers can be reset individually, or all at once.
 
-    Uses self._timers: Dict[str, Timer] = {} to store timers.
+    Example::
+
+        tc = TimerCollection()
+        tc.start('Timer 1')
+        tc.start('Timer 2')
+        time.sleep(1)
+        tc.stop('Timer 1')
+        time.sleep(1)
+        tc.stop('Timer 2')
+        tc.start('Timer 3')
+        time.sleep(1)
+        tc.reset('Timer 1')
+        print(tc)
+            # Timer 1: 0.000s
+            # Timer 2: 2.000s
+            # Timer 3: 1.000s
+        tc.reset_all()
+        print(tc)
+            # Timer 1: 0.000s
+            # Timer 2: 0.000s
+            # Timer 3: 0.000s
+
     """
     def __init__(self):
         self._timers: Dict[str, Timer] = {}
@@ -43,6 +64,10 @@ class TimerCollection:
         """Reset all timers."""
         for name in self._timers:
             self._timers[name].reset()
+
+    def names(self):
+        """Get the names of all timers."""
+        return self._timers.keys()
 
     def __str__(self):
         """Print each timer to the nearest microsecond."""

@@ -5,13 +5,7 @@ from dosaku.utils import TimerCollection
 
 
 def test_timer_collection():
-    """Test the TimerCollection class.
-
-    Use only the API methods available through the TimerCollection class. Do not access the private attributes of the
-    TimerCollection class. Do not access the timer_collection._timers dictionary directly.
-
-    DO NOT ACCESS timer_collection._timers DIRECTLY.
-    """
+    """Test the TimerCollection class."""
     timer_collection = TimerCollection()
 
     # Test that a timer can be started
@@ -55,6 +49,9 @@ def test_timer_collection():
 
     # Test that the timer collection can be converted to a string
     assert isinstance(str(timer_collection), str)
+
+    # Test that the timer collection can return the timer names
+    assert all([name in timer_collection.names() for name in ['Timer 1', 'Timer 2']])
 
     # Test that all timers can be reset
     timer_collection.reset_all()
