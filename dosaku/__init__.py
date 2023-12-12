@@ -11,6 +11,8 @@ from dosaku.core.exceptions import (ActionDoesNotExist,
 from dosaku.config.config import Config
 from dosaku.core.actor import Actor
 from dosaku.core.dosaku_base import DosakuBase
+from dosaku.core.module_info import ModuleInfo
+from dosaku.core.module_manager import ModuleManager
 from dosaku.core.task import Task
 from dosaku.core.module import Module
 from dosaku.core.service import Service

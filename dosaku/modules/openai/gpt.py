@@ -4,16 +4,14 @@ import openai.types.beta.threads.message_content_image_file
 from typing import Dict, List, Optional, Tuple, Union
 
 from openai import OpenAI
-from openai.types.beta.assistants.file_delete_response import FileDeleteResponse
 from openai.types import FileDeleted
 
-from dosaku import Config, Module
-from dosaku.tasks import Chat
+from dosaku import Config, Service
 from dosaku.types import Message
 from dosaku.utils import ifnone, bytes_to_pil
 
 
-class GPT(Module):
+class GPT(Service):
     """OpenAI GPT class.
 
     Args:
@@ -37,7 +35,6 @@ class GPT(Module):
     default_instructions = 'You are a helpful personal assistant. Answer user questions. Write code as necessary.'
     default_tools = [{"type": "code_interpreter"}, {"type": "retrieval"}]
     default_model = 'gpt-4-1106-preview'
-    logger = logging.getLogger(__name__)
 
     def __init__(
         self,
@@ -67,9 +64,6 @@ class GPT(Module):
 
         self.logger.info(f'Created GPT object {id(self)}')
 
-    def __enter__(self):
-        return self
-
     def __exit__(self, exc_type, exc_val, exc_tb):
         deleted_status = {}
         for filename in self.files.keys():
@@ -84,8 +78,8 @@ class GPT(Module):
         if not all(deleted):
             raise RuntimeError(
                 f'Unable to delete the following files: '
-                f'''{[deleted_status[filename]["status"] for filename in self.files.keys() 
-                    if not deleted_status[filename]["deleted"]]}''')
+                f'''{[deleted_status[filename]['status'] for filename in self.files.keys() 
+                    if not deleted_status[filename]['deleted']]}''')
         self.logger.debug(f'deleted: {deleted}')
         return True
 

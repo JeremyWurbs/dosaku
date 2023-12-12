@@ -18,6 +18,13 @@ class Module(DosakuBase):
     def is_executor(self) -> bool:
         return False
 
+    def to(self, device: str):
+        raise NotImplementedError(f'The Module {self.name} does not implement the method to(). Unable to move device.')
+
+    def remove_from_device(self):
+        raise NotImplementedError(
+            f'The Module {self.name} does not implement the method remove_from_device(). Unable to remove from device.')
+
     def exec(
             self,
             code: str,

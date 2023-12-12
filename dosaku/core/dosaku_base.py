@@ -11,7 +11,7 @@ class DosakuBase:
     """
     config = Config()
 
-    def __init__(self, suppress: bool = False):
+    def __init__(self, suppress: bool = False, **_):
         self.suppress = suppress
         self._logger = logging.getLogger(self.__module__)
         self.logger.debug(f'Initialized {self.__class__} object with id: {id(self)}.')
